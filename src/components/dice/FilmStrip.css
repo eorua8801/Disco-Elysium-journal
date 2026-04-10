@@ -1,0 +1,109 @@
+/* FilmStrip — vertical film reel for 2d6 rolls */
+
+.film-strip {
+  display: flex;
+  background: #080604;
+  border: 1px solid #2a1e10;
+  width: 86px;
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ── Sprocket columns ── */
+.film-strip__sprockets {
+  width: 14px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px 0;
+  background: #0d0a06;
+  border-right: 1px solid #1e1408;
+}
+.film-strip__sprockets:last-child {
+  border-right: none;
+  border-left: 1px solid #1e1408;
+}
+
+.film-sprocket {
+  width: 7px;
+  height: 5px;
+  border-radius: 1px;
+  background: transparent;
+  border: 1px solid #2e2010;
+}
+
+/* ── Scrolling window ── */
+.film-strip__window {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+/* top + bottom fade vignette */
+.film-strip__window::before,
+.film-strip__window::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 56px;
+  z-index: 3;
+  pointer-events: none;
+}
+.film-strip__window::before {
+  top: 0;
+  background: linear-gradient(to bottom, #080604 0%, transparent 100%);
+}
+.film-strip__window::after {
+  bottom: 0;
+  background: linear-gradient(to top, #080604 0%, transparent 100%);
+}
+
+/* ── Track ── */
+.film-strip__track {
+  will-change: transform;
+}
+
+/* motion blur during roll */
+.film-strip--rolling .film-strip__track {
+  filter: blur(1.5px);
+}
+/* snap clear when stopped */
+.film-strip:not(.film-strip--rolling) .film-strip__track {
+  filter: blur(0);
+  transition: filter 0.06s ease-out;
+}
+
+/* ── Frames ── */
+.film-frame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid #1a1208;
+}
+
+.film-frame__num {
+  font-family: var(--font-ui);
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* ── Gate — amber rails around center frame ── */
+.film-strip__gate {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 2px solid var(--amber);
+  border-bottom: 2px solid var(--amber);
+  pointer-events: none;
+  z-index: 2;
+  box-shadow:
+    0 -1px 6px rgba(196, 120, 42, 0.25),
+    0  1px 6px rgba(196, 120, 42, 0.25);
+}

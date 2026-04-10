@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useJournalStore } from '../store/journalStore';
 import { useDiceStore } from '../store/diceStore';
+import { playClick } from '../utils/sounds';
 import type { Mood } from '../types';
 import './EditorPage.css';
 
@@ -38,6 +39,7 @@ export function EditorPage() {
 
   const handleSave = async () => {
     if (!content.trim()) return;
+    playClick();
     setSaving(true);
     try {
       if (existing) {
@@ -58,6 +60,7 @@ export function EditorPage() {
   };
 
   const handleDiceRoll = async () => {
+    playClick();
     // Save as draft first if new entry, to have an ID to attach the check
     if (!existing && content.trim()) {
       setSaving(true);
@@ -92,6 +95,7 @@ export function EditorPage() {
         <button
           className="editor-header__cancel"
           onClick={() => {
+            playClick();
             if (savedId) navigate(`/entry/${savedId}`);
             else if (existing) navigate(`/entry/${existing.id}`);
             else navigate('/');

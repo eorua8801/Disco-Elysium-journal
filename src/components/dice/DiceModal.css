@@ -239,6 +239,37 @@
   padding: 12px;
 }
 
+/* ── Film strips row (rolling phase) ── */
+.film-strips-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  margin: var(--sp-4) 0;
+}
+
+.film-strips__plus {
+  font-family: var(--font-ui);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+/* Result dice: plain bordered number boxes (done phase) */
+.dice-result__face {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-amber);
+  background: var(--bg-card);
+  font-family: var(--font-ui);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
 /* Actions row */
 .dice-modal__actions {
   display: flex;

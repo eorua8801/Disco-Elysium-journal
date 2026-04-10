@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { DiceModal } from '../dice/DiceModal';
+import { playClick } from '../../utils/sounds';
 import './AppShell.css';
 
 const NAV_ITEMS = [
@@ -33,6 +34,7 @@ export function AppShell({ children }: AppShellProps) {
               className={({ isActive }) =>
                 `nav-item ${isActive ? 'nav-item--active' : ''} ${item.accent ? 'nav-item--accent' : ''}`
               }
+              onClick={playClick}
             >
               <span className="nav-item__icon">{item.icon}</span>
               <span className="nav-item__label">{item.label}</span>

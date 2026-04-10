@@ -1,18 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import { useDiceStore } from '../../store/diceStore';
 import { useJournalStore } from '../../store/journalStore';
-import { DiceFace } from './DiceFace';
+import { FilmStrip } from './FilmStrip';
 import { SKILLS, SKILLS_BY_ID, DIFFICULTY_LABELS } from '../../data/skills';
 import { createCheck, DIFFICULTY_PRESETS, getResultDescription } from '../../utils/diceEngine';
 import { suggestCheckParameters } from '../../utils/skillMatcher';
+import { playClick, startFilmWind, stopFilmWind, playShutter } from '../../utils/sounds';
 import './DiceModal.css';
 
 export function DiceModal() {
   const {
     isOpen, phase, skillId, difficulty, roll, total, passed,
-    pendingEntryId, closeModal, setSetup, startRoll, reset,
+    pendingEntryId, closeModal, setSetup, startRoll, finishRoll, reset,
   } = useDiceStore();
 
   const { attachCheck } = useJournalStore();
@@ -20,26 +21,18 @@ export function DiceModal() {
   const [localDesc, setLocalDesc] = useState('');
   const [localSkill, setLocalSkill] = useState(skillId);
   const [localDiff, setLocalDiff] = useState(difficulty);
-  const [displayDice, setDisplayDice] = useState<[number, number]>([1, 1]);
+  const [rollKey, setRollKey] = useState(0);
+  const stripsDoneRef = useRef(0);
 
-  // Cycle display dice during rolling
+  // Start/stop film wind sound with rolling phase
   useEffect(() => {
-    if (phase !== 'rolling' && phase !== 'slowing') return;
-    const interval = setInterval(() => {
-      setDisplayDice([
-        Math.ceil(Math.random() * 6),
-        Math.ceil(Math.random() * 6),
-      ] as [number, number]);
-    }, phase === 'rolling' ? 80 : 160);
-    return () => clearInterval(interval);
-  }, [phase]);
-
-  // Show final roll when revealing
-  useEffect(() => {
-    if (phase === 'revealing' || phase === 'done') {
-      setDisplayDice(roll);
+    if (phase === 'rolling') {
+      startFilmWind();
     }
-  }, [phase, roll]);
+    return () => {
+      if (phase === 'rolling') stopFilmWind();
+    };
+  }, [phase]);
 
   // Auto-suggest skill when description changes
   useEffect(() => {
@@ -51,11 +44,26 @@ export function DiceModal() {
   }, [localDesc]);
 
   const handleRoll = () => {
+    playClick();
+    stripsDoneRef.current = 0;
+    setRollKey(k => k + 1);
     setSetup(localSkill, localDiff, localDesc);
     startRoll();
   };
 
+  // Each FilmStrip calls this when its animation ends.
+  // Wait for both, then snap to done phase with shutter sound.
+  const handleStripDone = () => {
+    stripsDoneRef.current += 1;
+    if (stripsDoneRef.current >= 2) {
+      stopFilmWind();
+      playShutter();
+      setTimeout(() => finishRoll(), 80);
+    }
+  };
+
   const handleConfirm = async () => {
+    playClick();
     if (pendingEntryId && phase === 'done') {
       const check = createCheck(localSkill, localDiff, localDesc, roll);
       await attachCheck(pendingEntryId, check);
@@ -86,10 +94,10 @@ export function DiceModal() {
           exit={{ scale: 0.9, opacity: 0 }}
           transition={{ type: 'spring', stiffness: 280, damping: 22 }}
         >
-          {/* Setup phase */}
+          {/* ── Setup phase ── */}
           {phase === 'setup' && (
             <div className="dice-modal__setup">
-              <h2 className="dice-modal__title">SKILL CHECK</h2>
+              <h2 className="dice-modal__title">⬡ SKILL CHECK</h2>
 
               <div className="dice-setup__field">
                 <label>What are you attempting?</label>
@@ -132,7 +140,7 @@ export function DiceModal() {
               </div>
 
               <div className="dice-modal__actions">
-                <button className="btn-secondary" onClick={() => { reset(); closeModal(); }}>
+                <button className="btn-secondary" onClick={() => { playClick(); reset(); closeModal(); }}>
                   Cancel
                 </button>
                 <button
@@ -146,59 +154,63 @@ export function DiceModal() {
             </div>
           )}
 
-          {/* Rolling / Slowing / Revealing phases */}
-          {(phase === 'rolling' || phase === 'slowing' || phase === 'revealing') && (
+          {/* ── Rolling phase — film strips ── */}
+          {phase === 'rolling' && (
             <div className="dice-modal__rolling">
               <div className="dice-rolling__skill" style={{ color: skill?.color }}>
                 {skill?.name.toUpperCase()}
               </div>
               <div className="dice-rolling__desc">{localDesc}</div>
 
-              <div className="dice-rolling__dice">
-                <DiceFace
-                  value={displayDice[0]}
-                  rolling={phase === 'rolling' || phase === 'slowing'}
-                  size={88}
+              <div className="film-strips-row">
+                <FilmStrip
+                  key={`d1-${rollKey}`}
+                  finalValue={roll[0]}
+                  active={true}
+                  onDone={handleStripDone}
                 />
-                <DiceFace
-                  value={displayDice[1]}
-                  rolling={phase === 'rolling' || phase === 'slowing'}
-                  size={88}
+                <span className="film-strips__plus">+</span>
+                <FilmStrip
+                  key={`d2-${rollKey}`}
+                  finalValue={roll[1]}
+                  active={true}
+                  onDone={handleStripDone}
                 />
               </div>
 
               <div className="dice-rolling__vs">
-                <span className="dice-rolling__total">?</span>
+                <span className="dice-rolling__total" style={{ color: 'var(--text-muted)' }}>?</span>
                 <span className="dice-rolling__sep">vs</span>
                 <span className="dice-rolling__diff">{localDiff}</span>
               </div>
             </div>
           )}
 
-          {/* Done phase */}
+          {/* ── Done phase ── */}
           {phase === 'done' && (
             <motion.div
               className="dice-modal__result"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.25 }}
             >
               <motion.div
                 className={`result-banner ${passed ? 'result-banner--success' : 'result-banner--failure'}`}
-                initial={{ scale: 0.6, opacity: 0 }}
+                initial={{ scale: 0.7, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 18, delay: 0.1 }}
+                transition={{ type: 'spring', stiffness: 320, damping: 20, delay: 0.05 }}
               >
                 {getResultDescription({ skillId: localSkill, difficulty: localDiff, roll, total, passed } as any)}
               </motion.div>
 
+              {/* Result dice: plain number boxes */}
               <div className="dice-result__dice">
-                <DiceFace value={roll[0]} size={72} />
-                <DiceFace value={roll[1]} size={72} />
+                <div className="dice-result__face">{roll[0]}</div>
+                <div className="dice-result__face">{roll[1]}</div>
               </div>
 
               <div className="dice-result__score">
-                <span className="dice-result__total" style={{ color: passed ? 'var(--accent-yellow)' : 'var(--accent-red)' }}>
+                <span className="dice-result__total" style={{ color: passed ? 'var(--amber)' : 'var(--accent-red)' }}>
                   {total}
                 </span>
                 <span className="dice-result__vs">vs {localDiff} ({DIFFICULTY_LABELS[localDiff] ?? localDiff})</span>

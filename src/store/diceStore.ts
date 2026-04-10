@@ -17,6 +17,7 @@ interface DiceStore {
   closeModal: () => void;
   setSetup: (skillId: string, difficulty: number, description: string) => void;
   startRoll: () => void;
+  finishRoll: () => void;
   resolveRoll: (roll: [number, number]) => void;
   reset: () => void;
 }
@@ -48,32 +49,24 @@ export const useDiceStore = create<DiceStore>((set, get) => ({
     set({ skillId, difficulty, description });
   },
 
+  // Roll is calculated immediately so FilmStrip knows where to stop.
+  // The 'rolling' phase lasts until both strips call onDone → finishRoll().
   startRoll: () => {
-    set({ phase: 'rolling' });
+    const d1 = Math.ceil(Math.random() * 6) as 1 | 2 | 3 | 4 | 5 | 6;
+    const d2 = Math.ceil(Math.random() * 6) as 1 | 2 | 3 | 4 | 5 | 6;
+    const total = d1 + d2;
+    const { difficulty } = get();
+    set({
+      roll: [d1, d2],
+      total,
+      passed: total >= difficulty,
+      phase: 'rolling',
+    });
+  },
 
-    // Simulate roll timing
-    setTimeout(() => {
-      set({ phase: 'slowing' });
-    }, 1200);
-
-    setTimeout(() => {
-      const d1 = Math.ceil(Math.random() * 6) as 1|2|3|4|5|6;
-      const d2 = Math.ceil(Math.random() * 6) as 1|2|3|4|5|6;
-      const total = d1 + d2;
-      const { difficulty } = get();
-      const passed = total >= difficulty;
-
-      set({
-        roll: [d1, d2],
-        total,
-        passed,
-        phase: 'revealing',
-      });
-
-      setTimeout(() => {
-        set({ phase: 'done' });
-      }, 600);
-    }, 1800);
+  // Called by DiceModal after both film strips finish animating
+  finishRoll: () => {
+    set({ phase: 'done' });
   },
 
   resolveRoll: (roll) => {
