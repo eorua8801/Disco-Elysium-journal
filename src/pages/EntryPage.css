@@ -1,0 +1,111 @@
+.entry-page {
+  min-height: 100%;
+}
+
+.entry-page__header-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.entry-action-btn {
+  padding: 6px 8px;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  border-radius: 4px;
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.entry-action-btn:hover {
+  color: var(--text-secondary);
+  background: var(--bg-card);
+}
+
+.entry-action-btn--dice:hover {
+  color: var(--accent-yellow);
+}
+
+.entry-action-btn--danger:hover {
+  color: var(--accent-red);
+}
+
+/* Body */
+.entry-page__body {
+  padding: var(--spacing-md);
+}
+
+.entry-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.entry-meta__date {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+
+.entry-meta__mood {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Content */
+.entry-content {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xl);
+}
+
+.entry-content p {
+  margin-bottom: var(--spacing-md);
+}
+
+/* Sections */
+.entry-section {
+  margin-bottom: var(--spacing-md);
+}
+
+.entry-section__title {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Regenerate */
+.entry-regen {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-lg) 0;
+  border-top: 1px solid var(--border-dim);
+  margin-top: var(--spacing-md);
+}
+
+.entry-regen__btn {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  padding: 6px 14px;
+  border: 1px solid var(--border-dim);
+  border-radius: 3px;
+  transition: all var(--transition-fast);
+}
+
+.entry-regen__btn:hover:not(:disabled) {
+  color: var(--text-muted);
+  border-color: var(--border-muted);
+}
+
+.entry-regen__btn:disabled {
+  opacity: 0.5;
+}

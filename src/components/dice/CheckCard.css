@@ -1,0 +1,78 @@
+.check-card {
+  border-left: 3px solid var(--skill-color, var(--border-muted));
+  background: var(--bg-surface);
+  padding: 10px 14px;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 8px;
+}
+
+.check-card--pass {
+  border-left-color: var(--accent-yellow);
+}
+
+.check-card--fail {
+  border-left-color: var(--accent-red);
+}
+
+.check-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.check-card__skill {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+.check-card__result {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.check-card--pass .check-card__result {
+  color: var(--accent-yellow);
+}
+
+.check-card--fail .check-card__result {
+  color: var(--accent-red);
+}
+
+.check-card__desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: 6px;
+}
+
+.check-card__roll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.check-card__dice {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.check-card__total {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.check-card__total--pass { color: var(--accent-yellow); }
+.check-card__total--fail { color: var(--accent-red); }
+
+.check-card__vs {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-dim);
+}

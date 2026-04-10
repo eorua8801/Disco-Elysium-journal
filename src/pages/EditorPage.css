@@ -1,0 +1,193 @@
+.editor-page {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-primary);
+}
+
+/* Editor Header */
+.editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--border-dim);
+  position: sticky;
+  top: 0;
+  background: var(--bg-primary);
+  z-index: 10;
+  gap: var(--spacing-sm);
+}
+
+.editor-header__cancel {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  padding: 6px 8px;
+  transition: color var(--transition-fast);
+}
+
+.editor-header__cancel:hover {
+  color: var(--text-secondary);
+}
+
+.editor-header__meta {
+  flex: 1;
+  text-align: center;
+}
+
+.editor-word-count {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+}
+
+.editor-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.editor-header__dice {
+  font-size: 1.3rem;
+  color: var(--text-dim);
+  padding: 4px 6px;
+  transition: color var(--transition-fast);
+}
+
+.editor-header__dice:hover {
+  color: var(--accent-yellow);
+}
+
+.editor-header__save {
+  padding: 8px 16px;
+  background: var(--accent-yellow-dim);
+  color: var(--accent-yellow);
+  border: 1px solid var(--accent-yellow-dim);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  transition: all var(--transition-fast);
+}
+
+.editor-header__save:hover:not(:disabled) {
+  background: var(--accent-yellow);
+  color: var(--bg-primary);
+}
+
+.editor-header__save:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.editor-header__save--saving {
+  opacity: 0.6;
+}
+
+/* Editor body */
+.editor-body {
+  flex: 1;
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* Mood */
+.editor-mood {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.mood-btn {
+  padding: 5px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+  transition: all var(--transition-fast);
+}
+
+.mood-btn:hover {
+  border-color: var(--mood-color, var(--border-muted));
+  color: var(--mood-color, var(--text-muted));
+}
+
+.mood-btn--active {
+  border-color: var(--mood-color);
+  color: var(--mood-color);
+  background: color-mix(in srgb, var(--mood-color) 10%, transparent);
+}
+
+/* Title */
+.editor-title {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-dim);
+  border-radius: 0;
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: var(--spacing-xs) 0 var(--spacing-sm);
+  outline: none;
+}
+
+.editor-title::placeholder {
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+/* Content textarea */
+.editor-content {
+  width: 100%;
+  min-height: 200px;
+  background: transparent;
+  border: none;
+  resize: none;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+  padding: var(--spacing-sm) 0;
+  outline: none;
+}
+
+.editor-content::placeholder {
+  color: var(--text-dim);
+  font-style: italic;
+}
+
+/* Floating dice button */
+.editor-float-dice {
+  position: fixed;
+  bottom: calc(var(--spacing-xl) + env(safe-area-inset-bottom, 0px));
+  right: var(--spacing-lg);
+  width: 52px;
+  height: 52px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-muted);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-float);
+  transition: all var(--transition-fast);
+  z-index: 50;
+}
+
+.editor-float-dice:hover {
+  color: var(--accent-yellow);
+  border-color: var(--accent-yellow-dim);
+  box-shadow: var(--glow-yellow), var(--shadow-float);
+}

@@ -1,0 +1,65 @@
+.skill-voice {
+  border-left: 3px solid var(--skill-color, var(--accent-yellow));
+  background: var(--bg-surface);
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  border-radius: 0 4px 4px 0;
+  position: relative;
+}
+
+.skill-voice::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--skill-color) 8%, transparent), transparent);
+  border-radius: 0 4px 4px 0;
+  pointer-events: none;
+}
+
+.skill-voice__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.skill-voice__name {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--skill-color, var(--accent-yellow));
+}
+
+.skill-voice__stat {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  opacity: 0.7;
+}
+
+.skill-voice__source {
+  font-size: 0.6rem;
+  color: var(--accent-yellow-dim);
+  margin-left: auto;
+  opacity: 0.6;
+}
+
+.skill-voice__text {
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  font-style: italic;
+}
+
+.typewriter-cursor {
+  color: var(--accent-yellow);
+  animation: cursorBlink 0.8s step-end infinite;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}

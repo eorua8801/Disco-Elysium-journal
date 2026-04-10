@@ -1,0 +1,131 @@
+.skills-page {
+  min-height: 100%;
+}
+
+.skills-page__body {
+  padding: var(--spacing-md);
+}
+
+.skills-page__hint {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.5;
+}
+
+.skills-page__all-btn {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  border: 1px solid var(--border-dim);
+  border-radius: 3px;
+  transition: all var(--transition-fast);
+}
+
+.skills-page__all-btn:hover {
+  color: var(--accent-yellow);
+  border-color: var(--accent-yellow-dim);
+}
+
+.skills-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.skills-section__title {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: var(--spacing-sm);
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.skill-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dim);
+  border-radius: 4px;
+  padding: 10px 12px;
+  transition: border-color var(--transition-fast);
+}
+
+.skill-card--active {
+  border-left: 2px solid var(--skill-color);
+}
+
+.skill-card--inactive {
+  opacity: 0.45;
+}
+
+.skill-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.skill-card__name {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: left;
+  flex: 1;
+  transition: color var(--transition-fast);
+}
+
+.skill-card--active .skill-card__name {
+  color: var(--skill-color);
+}
+
+.skill-toggle {
+  font-size: 0.85rem;
+  transition: color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.skill-toggle--on {
+  color: var(--skill-color);
+}
+
+.skill-toggle--off {
+  color: var(--text-dim);
+}
+
+.skill-card__detail {
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.skill-card__desc {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-style: italic;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.skill-card__keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.skill-keyword {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  padding: 1px 5px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-dim);
+  border-radius: 2px;
+  color: var(--text-dim);
+  letter-spacing: 0.04em;
+}

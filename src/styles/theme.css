@@ -1,0 +1,73 @@
+/* Disco Elysium Journal — Theme Variables */
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Share+Tech+Mono&display=swap');
+
+:root {
+  /* Background layers */
+  --bg-primary: #0c0c0c;
+  --bg-surface: #131313;
+  --bg-card: #1a1a1a;
+  --bg-card-hover: #202020;
+  --bg-overlay: rgba(0, 0, 0, 0.85);
+
+  /* Text */
+  --text-primary: #e2d8c4;
+  --text-secondary: #b0a690;
+  --text-muted: #6a6050;
+  --text-dim: #3a3530;
+
+  /* Accent colors */
+  --accent-yellow: #d4a843;
+  --accent-yellow-dim: #8a6c28;
+  --accent-yellow-glow: rgba(212, 168, 67, 0.2);
+  --accent-red: #c0392b;
+  --accent-red-dim: #7a2419;
+  --accent-red-glow: rgba(192, 57, 43, 0.2);
+  --accent-blue: #2e86ab;
+  --accent-green: #27ae60;
+
+  /* Borders */
+  --border-dim: #252520;
+  --border-muted: #333330;
+  --border-accent: #d4a843;
+
+  /* Stat group colors */
+  --intellect: #4a90d9;
+  --intellect-dim: #1a3a6a;
+  --psyche: #9b59b6;
+  --psyche-dim: #3d1f55;
+  --physique: #c0392b;
+  --physique-dim: #5a1a14;
+  --motorics: #27ae60;
+  --motorics-dim: #0f4a28;
+
+  /* Scanlines */
+  --scanline-opacity: 0.025;
+
+  /* Typography */
+  --font-serif: 'Crimson Text', 'Georgia', serif;
+  --font-body: 'Source Serif 4', 'Georgia', serif;
+  --font-mono: 'Share Tech Mono', 'Courier New', monospace;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  /* Mobile safe areas */
+  --nav-height: 56px;
+  --header-height: 52px;
+
+  /* Transitions */
+  --transition-fast: 120ms ease;
+  --transition-mid: 240ms ease;
+  --transition-slow: 400ms ease;
+
+  /* Shadows */
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.6);
+  --shadow-float: 0 8px 32px rgba(0,0,0,0.8);
+  --glow-yellow: 0 0 12px rgba(212, 168, 67, 0.4);
+  --glow-red: 0 0 12px rgba(192, 57, 43, 0.5);
+}

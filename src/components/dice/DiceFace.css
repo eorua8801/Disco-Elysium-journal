@@ -1,0 +1,32 @@
+.dice-face {
+  position: relative;
+  background: var(--bg-card);
+  border: 2px solid var(--border-muted);
+  border-radius: 12px;
+  box-shadow:
+    inset 0 2px 6px rgba(0,0,0,0.5),
+    0 4px 12px rgba(0,0,0,0.4);
+  perspective: 300px;
+  transform-style: preserve-3d;
+}
+
+.dice-face--rolling {
+  border-color: var(--accent-yellow-dim);
+  box-shadow:
+    inset 0 2px 6px rgba(0,0,0,0.5),
+    0 4px 20px var(--accent-yellow-glow);
+}
+
+.dice-dot {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+.dice-face--rolling .dice-dot {
+  background: var(--accent-yellow);
+  box-shadow: 0 0 6px var(--accent-yellow-glow);
+}
