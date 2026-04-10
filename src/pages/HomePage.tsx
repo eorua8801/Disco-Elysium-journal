@@ -10,9 +10,7 @@ export function HomePage() {
   const { entries, loading, loadEntries } = useJournalStore();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    loadEntries();
-  }, [loadEntries]);
+  useEffect(() => { loadEntries(); }, [loadEntries]);
 
   const today = new Date().toDateString();
   const todayEntries = entries.filter(e => new Date(e.createdAt).toDateString() === today);
@@ -22,23 +20,18 @@ export function HomePage() {
     <div className="home-page animate-page-in">
       <PageHeader
         title="Disco Journal"
-        subtitle={`${entries.length} entr${entries.length === 1 ? 'y' : 'ies'} recorded`}
+        icon="◈"
+        subtitle={entries.length > 0 ? `${entries.length} entr${entries.length === 1 ? 'y' : 'ies'}` : undefined}
         actions={
-          <button
-            className="home-page__new-btn"
-            onClick={() => navigate('/new')}
-            aria-label="New entry"
-          >
-            ⊕
+          <button className="home-page__new-btn btn-primary" onClick={() => navigate('/new')}>
+            ⊕ New
           </button>
         }
       />
 
       <div className="home-page__content">
         {loading && (
-          <div className="home-page__loading">
-            <span className="mono text-muted">Loading entries...</span>
-          </div>
+          <div className="home-page__loading">Loading entries…</div>
         )}
 
         {!loading && entries.length === 0 && (
@@ -50,48 +43,49 @@ export function HomePage() {
           >
             <p className="home-page__empty-title">The journal is empty.</p>
             <p className="home-page__empty-sub">
-              What happened today? Your skills are waiting to weigh in.
+              What happened today?<br />Your skills are waiting to weigh in.
             </p>
-            <button
-              className="home-page__empty-cta"
-              onClick={() => navigate('/new')}
-            >
-              Write your first entry
+            <button className="btn-primary" onClick={() => navigate('/new')}>
+              Write first entry ✦
             </button>
           </motion.div>
         )}
 
         {todayEntries.length > 0 && (
           <section className="home-page__section">
-            <h3 className="home-page__section-title">Today</h3>
-            {todayEntries.map((entry, i) => (
-              <motion.div
-                key={entry.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.06 }}
-              >
-                <EntryCard entry={entry} />
-              </motion.div>
-            ))}
+            <h3 className="home-page__section-title">◈ Today</h3>
+            <div className="home-page__list">
+              {todayEntries.map((entry, i) => (
+                <motion.div
+                  key={entry.id}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <EntryCard entry={entry} />
+                </motion.div>
+              ))}
+            </div>
           </section>
         )}
 
         {olderEntries.length > 0 && (
           <section className="home-page__section">
             {todayEntries.length > 0 && (
-              <h3 className="home-page__section-title">Earlier</h3>
+              <h3 className="home-page__section-title">◎ Earlier</h3>
             )}
-            {olderEntries.map((entry, i) => (
-              <motion.div
-                key={entry.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: (i + todayEntries.length) * 0.06 }}
-              >
-                <EntryCard entry={entry} />
-              </motion.div>
-            ))}
+            <div className="home-page__list">
+              {olderEntries.map((entry, i) => (
+                <motion.div
+                  key={entry.id}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: (i + todayEntries.length) * 0.05 }}
+                >
+                  <EntryCard entry={entry} />
+                </motion.div>
+              ))}
+            </div>
           </section>
         )}
       </div>

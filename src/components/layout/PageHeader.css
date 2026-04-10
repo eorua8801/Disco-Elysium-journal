@@ -1,54 +1,72 @@
+/* PageHeader — white solid bar style (matches game's section headers) */
+
 .page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-md) var(--spacing-md) var(--spacing-sm);
-  border-bottom: 1px solid var(--border-dim);
+  padding: var(--sp-3) var(--sp-4);
   position: sticky;
   top: 0;
-  background: var(--bg-primary);
   z-index: 10;
+  /* Dark background with bottom amber line */
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-amber);
 }
 
 .page-header__left {
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: var(--sp-3);
   min-width: 0;
+  flex: 1;
 }
 
 .page-header__back {
-  font-size: 1.2rem;
-  color: var(--text-muted);
-  padding: 4px 8px;
-  border-radius: 4px;
-  transition: color var(--transition-fast);
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--amber);
+  padding: 4px 0;
   flex-shrink: 0;
+  transition: color var(--t-fast);
 }
+.page-header__back:hover { color: var(--amber-bright); }
 
-.page-header__back:hover {
-  color: var(--accent-yellow);
-}
-
+/* The white bar holding the title (like "CASE FILES" in game) */
 .page-header__text {
+  background: var(--bg-white-bar);
+  padding: 5px 12px;
   min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.page-header__icon {
+  font-size: 0.85rem;
+  flex-shrink: 0;
+  color: var(--text-dark);
 }
 
 .page-header__title {
-  font-family: var(--font-serif);
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-dark);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--text-primary);
 }
 
 .page-header__subtitle {
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   color: var(--text-muted);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-top: 1px;
 }
@@ -56,7 +74,17 @@
 .page-header__actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--sp-1);
   flex-shrink: 0;
-  margin-left: var(--spacing-sm);
+  margin-left: var(--sp-2);
 }
+
+/* Close button (×) */
+.page-header__close {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 4px 6px;
+  transition: color var(--t-fast);
+}
+.page-header__close:hover { color: var(--text-primary); }

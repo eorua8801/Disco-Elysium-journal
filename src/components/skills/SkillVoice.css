@@ -1,62 +1,73 @@
+/* SkillVoice — amber-bordered field box, DE Case Files style */
+
 .skill-voice {
-  border-left: 3px solid var(--skill-color, var(--accent-yellow));
-  background: var(--bg-surface);
-  padding: 10px 14px;
-  margin-bottom: 10px;
-  border-radius: 0 4px 4px 0;
+  border: 1px solid var(--skill-color, var(--border-amber));
+  background: var(--bg-card);
+  margin-bottom: 3px;
   position: relative;
+  overflow: hidden;
 }
 
+/* Subtle color tint from the left */
 .skill-voice::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, color-mix(in srgb, var(--skill-color) 8%, transparent), transparent);
-  border-radius: 0 4px 4px 0;
-  pointer-events: none;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--skill-color, var(--amber));
 }
 
 .skill-voice__header {
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 6px;
+  padding: 6px 10px 4px 14px;
+  border-bottom: 1px solid var(--border-dim);
 }
 
+/* Skill name — amber ALL CAPS label (like Case Files field labels) */
 .skill-voice__name {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--skill-color, var(--accent-yellow));
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--skill-color, var(--amber));
 }
 
 .skill-voice__stat {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  color: var(--text-muted);
-  letter-spacing: 0.06em;
-  opacity: 0.7;
+  font-family: var(--font-ui);
+  font-size: 0.52rem;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  text-transform: uppercase;
 }
 
 .skill-voice__source {
-  font-size: 0.6rem;
-  color: var(--accent-yellow-dim);
+  font-size: 0.55rem;
+  color: var(--amber-dim);
   margin-left: auto;
-  opacity: 0.6;
+  opacity: 0.7;
 }
 
+/* Text — italic serif, like a statement/quote */
 .skill-voice__text {
   font-family: var(--font-body);
   font-size: 0.92rem;
   color: var(--text-secondary);
-  line-height: 1.55;
+  line-height: 1.6;
   font-style: italic;
+  padding: 8px 10px 10px 14px;
 }
 
+/* Typewriter cursor */
 .typewriter-cursor {
-  color: var(--accent-yellow);
-  animation: cursorBlink 0.8s step-end infinite;
+  display: inline-block;
+  color: var(--amber);
+  animation: cursorBlink 0.75s step-end infinite;
+  margin-left: 1px;
 }
 
 @keyframes cursorBlink {

@@ -2,42 +2,31 @@ import { useNavigate } from 'react-router-dom';
 import type { JournalEntry } from '../../types';
 import './EntryCard.css';
 
-const MOOD_COLORS = {
-  hopeful: '#27ae60',
-  neutral: '#7a7060',
-  troubled: '#d4a843',
-  numb: '#2e86ab',
-};
-
-const MOOD_LABELS = {
-  hopeful: '◉ Hopeful',
-  neutral: '◎ Neutral',
-  troubled: '◈ Troubled',
-  numb: '◌ Numb',
+const MOOD_COLORS: Record<string, string> = {
+  hopeful:   '#27ae60',
+  neutral:   '#7a7060',
+  troubled:  '#c4782a',
+  numb:      '#2e86ab',
+  angry:     '#c0392b',
+  nostalgic: '#8b4fd4',
+  anxious:   '#d4a024',
+  determined:'#3a8fd4',
 };
 
 function formatDate(iso: string): string {
-  const d = new Date(iso);
-  return d.toLocaleDateString('en-US', {
-    weekday: 'short', month: 'short', day: 'numeric', year: 'numeric',
+  return new Date(iso).toLocaleDateString('en-US', {
+    weekday: 'short', month: 'short', day: 'numeric',
   });
 }
 
 function formatTime(iso: string): string {
-  const d = new Date(iso);
-  return d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  return new Date(iso).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
 }
 
-interface EntryCardProps {
-  entry: JournalEntry;
-}
-
-export function EntryCard({ entry }: EntryCardProps) {
+export function EntryCard({ entry }: { entry: JournalEntry }) {
   const navigate = useNavigate();
-
-  const preview = entry.content.slice(0, 120).trim() + (entry.content.length > 120 ? '…' : '');
-  const passCount = entry.checks.filter(c => c.passed).length;
-  const failCount = entry.checks.filter(c => !c.passed).length;
+  const preview = entry.content.slice(0, 100).trim() + (entry.content.length > 100 ? '…' : '');
+  const moodColor = entry.mood ? MOOD_COLORS[entry.mood] : undefined;
 
   return (
     <article
@@ -47,39 +36,38 @@ export function EntryCard({ entry }: EntryCardProps) {
       tabIndex={0}
       onKeyDown={e => e.key === 'Enter' && navigate(`/entry/${entry.id}`)}
     >
-      <div className="entry-card__meta">
-        <span className="entry-card__date">{formatDate(entry.createdAt)}</span>
-        <span className="entry-card__time">{formatTime(entry.createdAt)}</span>
+      {/* Left mood strip */}
+      {moodColor && (
+        <span className="entry-card__mood-strip" style={{ background: moodColor }} />
+      )}
+
+      <div className="entry-card__body">
+        {/* Top: date + time */}
+        <div className="entry-card__meta">
+          <span className="entry-card__date">{formatDate(entry.createdAt)}</span>
+          <span className="entry-card__time">{formatTime(entry.createdAt)}</span>
+        </div>
+
+        {/* Title */}
+        <h2 className="entry-card__title">{entry.title || 'Untitled Entry'}</h2>
+
+        {/* Preview text */}
+        {preview && <p className="entry-card__preview">{preview}</p>}
       </div>
 
-      <h2 className="entry-card__title">{entry.title || 'Untitled Entry'}</h2>
-
-      {preview && <p className="entry-card__preview">{preview}</p>}
-
-      <div className="entry-card__footer">
-        {entry.mood && (
-          <span
-            className="entry-card__mood"
-            style={{ color: MOOD_COLORS[entry.mood] }}
-          >
-            {MOOD_LABELS[entry.mood]}
-          </span>
-        )}
-
+      {/* Right: play button (amber square — like game's ▶ button) */}
+      <div className="entry-card__play">
+        <span>▶</span>
+        {/* badges below play button */}
         <div className="entry-card__badges">
           {entry.skillComments.length > 0 && (
-            <span className="entry-badge entry-badge--skill" title="Skill voices">
-              ◉ {entry.skillComments.length}
+            <span className="entry-badge" title="Skill voices" style={{ color: 'var(--intellect)' }}>
+              ◉{entry.skillComments.length}
             </span>
           )}
-          {passCount > 0 && (
-            <span className="entry-badge entry-badge--pass" title="Passed checks">
-              ✓ {passCount}
-            </span>
-          )}
-          {failCount > 0 && (
-            <span className="entry-badge entry-badge--fail" title="Failed checks">
-              ✗ {failCount}
+          {entry.checks.length > 0 && (
+            <span className="entry-badge" title="Checks" style={{ color: entry.checks.some(c => !c.passed) ? 'var(--accent-red)' : 'var(--amber)' }}>
+              ⚄{entry.checks.length}
             </span>
           )}
         </div>

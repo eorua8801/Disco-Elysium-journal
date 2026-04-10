@@ -1,78 +1,89 @@
+/* CheckCard — amber-bordered field box with pass/fail state */
+
 .check-card {
-  border-left: 3px solid var(--skill-color, var(--border-muted));
-  background: var(--bg-surface);
-  padding: 10px 14px;
-  border-radius: 0 4px 4px 0;
-  margin-bottom: 8px;
+  border: 1px solid var(--border-amber);
+  background: var(--bg-card);
+  margin-bottom: 3px;
+  position: relative;
+  overflow: hidden;
 }
 
-.check-card--pass {
-  border-left-color: var(--accent-yellow);
+/* Left result strip */
+.check-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
 }
-
-.check-card--fail {
-  border-left-color: var(--accent-red);
-}
+.check-card--pass::before { background: var(--amber); }
+.check-card--fail::before { background: var(--accent-red); }
 
 .check-card__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 4px;
+  padding: 6px 10px 4px 14px;
+  border-bottom: 1px solid var(--border-dim);
 }
 
 .check-card__skill {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
   font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--amber);
 }
 
 .check-card__result {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--text-muted);
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
+.check-card--pass .check-card__result { color: var(--amber-bright); }
+.check-card--fail .check-card__result { color: var(--accent-red); }
 
-.check-card--pass .check-card__result {
-  color: var(--accent-yellow);
-}
-
-.check-card--fail .check-card__result {
-  color: var(--accent-red);
+.check-card__body {
+  padding: 8px 10px 10px 14px;
 }
 
 .check-card__desc {
+  font-family: var(--font-body);
   font-size: 0.9rem;
   color: var(--text-secondary);
   font-style: italic;
   margin-bottom: 6px;
+  line-height: 1.45;
 }
 
 .check-card__roll {
   display: flex;
   align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: var(--sp-3);
 }
 
 .check-card__dice {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   color: var(--text-muted);
 }
 
 .check-card__total {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
   font-weight: 700;
 }
-
-.check-card__total--pass { color: var(--accent-yellow); }
+.check-card__total--pass { color: var(--amber); }
 .check-card__total--fail { color: var(--accent-red); }
 
 .check-card__vs {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
   color: var(--text-dim);
+  text-transform: uppercase;
 }

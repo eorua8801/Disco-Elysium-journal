@@ -1,74 +1,81 @@
-.home-page {
-  min-height: 100%;
-}
+/* HomePage — quest log style */
 
-.home-page__content {
-  padding: var(--spacing-md);
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-xs);
-}
+.home-page { min-height: 100%; }
 
 .home-page__new-btn {
-  font-size: 1.5rem;
-  color: var(--accent-yellow-dim);
+  font-size: 1.3rem;
+  color: var(--text-dark);
   padding: 4px 8px;
-  transition: color var(--transition-fast), text-shadow var(--transition-fast);
+  transition: opacity var(--t-fast);
+}
+.home-page__new-btn:hover { opacity: 0.7; }
+
+.home-page__content {
+  padding: var(--sp-3) var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
 }
 
-.home-page__new-btn:hover {
-  color: var(--accent-yellow);
-  text-shadow: var(--glow-yellow);
+/* Loading */
+.home-page__loading {
+  text-align: center;
+  padding: var(--sp-12) var(--sp-6);
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  text-transform: uppercase;
 }
 
-.home-page__loading,
+/* Empty state */
 .home-page__empty {
   text-align: center;
-  padding: var(--spacing-2xl) var(--spacing-lg);
+  padding: var(--sp-12) var(--sp-6);
 }
 
 .home-page__empty-title {
-  font-family: var(--font-serif);
-  font-size: 1.2rem;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
   color: var(--text-secondary);
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: var(--sp-3);
 }
 
 .home-page__empty-sub {
+  font-family: var(--font-body);
   font-size: 0.9rem;
+  font-style: italic;
   color: var(--text-muted);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--sp-6);
   line-height: 1.6;
 }
 
-.home-page__empty-cta {
-  display: inline-block;
-  padding: 12px 24px;
-  background: var(--accent-yellow-dim);
-  color: var(--accent-yellow);
-  border: 1px solid var(--accent-yellow-dim);
-  border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  transition: all var(--transition-fast);
-}
-
-.home-page__empty-cta:hover {
-  background: var(--accent-yellow);
-  color: var(--bg-primary);
-}
-
+/* Section header — white solid bar (like "LOOSE ENDS") */
 .home-page__section {
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--sp-3);
 }
 
 .home-page__section-title {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.14em;
-  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  background: var(--bg-white-bar);
+  color: var(--text-dark);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  margin-bottom: var(--spacing-sm);
-  padding-left: 2px;
+  padding: 5px 12px;
+  margin-bottom: var(--sp-2);
+}
+
+/* Entry list: no gap between cards — stacked like DE quest items */
+.home-page__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }

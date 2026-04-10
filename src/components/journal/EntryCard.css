@@ -1,113 +1,120 @@
+/* EntryCard — quest list item style (portrait + title + ▶ button) */
+
 .entry-card {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border: 1px solid var(--border-amber);
   background: var(--bg-card);
-  border: 1px solid var(--border-dim);
-  border-radius: 4px;
-  padding: var(--spacing-md);
   cursor: pointer;
-  transition: background var(--transition-fast), border-color var(--transition-fast);
+  transition: background var(--t-fast), border-color var(--t-fast);
   position: relative;
   overflow: hidden;
-}
-
-.entry-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 2px;
-  height: 100%;
-  background: transparent;
-  transition: background var(--transition-mid);
+  min-height: 72px;
 }
 
 .entry-card:hover {
   background: var(--bg-card-hover);
-  border-color: var(--border-muted);
+  border-color: var(--amber-bright);
 }
 
-.entry-card:hover::before {
-  background: var(--accent-yellow-dim);
+/* Left mood color strip */
+.entry-card__mood-strip {
+  width: 3px;
+  flex-shrink: 0;
+  display: block;
+  opacity: 0.85;
 }
 
+/* Main content area */
+.entry-card__body {
+  flex: 1;
+  padding: var(--sp-3) var(--sp-3);
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Date + time row */
 .entry-card__meta {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 6px;
+  gap: var(--sp-2);
 }
 
 .entry-card__date {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: var(--accent-yellow-dim);
-  letter-spacing: 0.06em;
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--amber);
 }
 
 .entry-card__time {
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.58rem;
   color: var(--text-dim);
 }
 
+/* Title — ALL CAPS, spaced (matches game quest titles) */
 .entry-card__title {
-  font-family: var(--font-serif);
-  font-size: 1.05rem;
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
   font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--text-primary);
-  margin-bottom: 6px;
-  line-height: 1.3;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
+/* Preview text */
 .entry-card__preview {
-  font-size: 0.88rem;
+  font-family: var(--font-body);
+  font-size: 0.78rem;
   color: var(--text-muted);
-  line-height: 1.5;
-  margin-bottom: var(--spacing-sm);
+  line-height: 1.45;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  font-style: italic;
 }
 
-.entry-card__footer {
+/* Right play button (amber square — like game's ▶) */
+.entry-card__play {
+  width: 52px;
+  flex-shrink: 0;
+  background: var(--bg-white-bar);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: var(--spacing-xs);
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-dark);
+  font-size: 0.8rem;
+  border-left: 1px solid var(--border-amber);
+  transition: background var(--t-fast);
 }
 
-.entry-card__mood {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.06em;
+.entry-card:hover .entry-card__play {
+  background: #e0dcc8;
 }
 
+/* Badges inside play column */
 .entry-card__badges {
   display: flex;
-  gap: 6px;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
 
 .entry-badge {
   font-family: var(--font-mono);
-  font-size: 0.6rem;
-  padding: 2px 6px;
-  border-radius: 2px;
+  font-size: 0.52rem;
   letter-spacing: 0.04em;
-}
-
-.entry-badge--skill {
-  background: rgba(74, 144, 217, 0.1);
-  color: var(--intellect);
-}
-
-.entry-badge--pass {
-  background: rgba(212, 168, 67, 0.1);
-  color: var(--accent-yellow);
-}
-
-.entry-badge--fail {
-  background: rgba(192, 57, 43, 0.1);
-  color: var(--accent-red);
+  line-height: 1;
 }

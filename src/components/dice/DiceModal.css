@@ -1,27 +1,28 @@
+/* DiceModal — Profile > Skills dice screen style */
+
 .dice-overlay {
   position: fixed;
   inset: 0;
-  background: var(--bg-overlay);
+  background: rgba(8, 6, 3, 0.92);
   display: flex;
   align-items: flex-end;
   justify-content: center;
   z-index: 1000;
   padding: 0 0 env(safe-area-inset-bottom, 0);
+  backdrop-filter: blur(3px);
 }
 
 @media (min-width: 480px) {
-  .dice-overlay {
-    align-items: center;
-  }
+  .dice-overlay { align-items: center; }
 }
 
 .dice-modal {
   background: var(--bg-surface);
-  border: 1px solid var(--border-muted);
-  border-radius: 12px 12px 0 0;
+  border: 1px solid var(--border-amber);
+  border-top: 3px solid var(--amber);
   width: 100%;
   max-width: 480px;
-  padding: var(--spacing-lg);
+  padding: var(--sp-5);
   position: relative;
   overflow: hidden;
   max-height: 90dvh;
@@ -29,65 +30,68 @@
 }
 
 @media (min-width: 480px) {
-  .dice-modal {
-    border-radius: 12px;
-  }
+  .dice-modal { border: 1px solid var(--border-amber); border-top: 3px solid var(--amber); }
 }
 
-.dice-modal--success {
-  border-color: var(--accent-yellow-dim);
-}
+.dice-modal--success { border-top-color: var(--amber-bright); }
+.dice-modal--failure { border-top-color: var(--accent-red); }
 
-.dice-modal--failure {
-  border-color: var(--accent-red-dim);
-}
+/* ── Setup phase ── */
+.dice-modal__setup {}
 
-/* Setup */
 .dice-modal__title {
-  font-family: var(--font-mono);
+  background: var(--bg-white-bar);
+  color: var(--text-dark);
+  font-family: var(--font-ui);
   font-size: 0.75rem;
-  letter-spacing: 0.15em;
-  color: var(--text-muted);
-  margin-bottom: var(--spacing-lg);
-  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  margin-bottom: var(--sp-4);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
 }
 
 .dice-setup__field {
-  margin-bottom: var(--spacing-md);
+  margin-bottom: var(--sp-4);
 }
 
 .dice-setup__field label {
   display: block;
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
+  font-family: var(--font-ui);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber);
   margin-bottom: 6px;
 }
 
 .dice-setup__field textarea {
   width: 100%;
   resize: none;
-  min-height: 64px;
+  min-height: 60px;
 }
 
 .dice-setup__field select {
   width: 100%;
-  padding: var(--spacing-sm) var(--spacing-md);
+  padding: var(--sp-2) var(--sp-3);
   background: var(--bg-card);
-  border: 1px solid var(--border-muted);
-  border-radius: 3px;
+  border: 1px solid var(--border-amber);
   color: var(--text-primary);
   font-family: var(--font-body);
   font-size: 0.95rem;
   outline: none;
   cursor: pointer;
+  border-radius: 0;
 }
 
 .dice-setup__difficulty {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
+  gap: 3px;
 }
 
 .diff-btn {
@@ -97,47 +101,47 @@
   gap: 2px;
   padding: 8px 4px;
   background: var(--bg-card);
-  border: 1px solid var(--border-dim);
-  border-radius: 4px;
+  border: 1px solid var(--border-muted);
   color: var(--text-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-ui);
   font-size: 0.9rem;
   font-weight: 700;
-  transition: all var(--transition-fast);
+  transition: all var(--t-fast);
+  cursor: pointer;
 }
-
 .diff-btn span {
-  font-size: 0.55rem;
-  letter-spacing: 0.04em;
+  font-size: 0.5rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  font-weight: 600;
 }
-
 .diff-btn--active,
 .diff-btn:hover {
-  border-color: var(--accent-yellow-dim);
-  color: var(--accent-yellow);
+  border-color: var(--amber);
+  color: var(--amber-bright);
   background: var(--bg-card-hover);
 }
 
-/* Rolling */
+/* ── Rolling phase ── */
 .dice-modal__rolling {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-sm) 0;
+  gap: var(--sp-4);
+  padding: var(--sp-4) 0;
 }
 
 .dice-rolling__skill {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
   font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
 }
 
 .dice-rolling__desc {
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--text-secondary);
   font-style: italic;
   text-align: center;
@@ -146,85 +150,69 @@
 
 .dice-rolling__dice {
   display: flex;
-  gap: var(--spacing-lg);
-  margin: var(--spacing-md) 0;
+  gap: var(--sp-6);
+  margin: var(--sp-3) 0;
 }
 
 .dice-rolling__vs {
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  font-family: var(--font-mono);
+  gap: var(--sp-4);
+  font-family: var(--font-ui);
 }
+.dice-rolling__total { font-size: 2.2rem; font-weight: 700; color: var(--text-muted); }
+.dice-rolling__sep { font-size: 0.65rem; letter-spacing: 0.15em; color: var(--text-dim); text-transform: uppercase; }
+.dice-rolling__diff { font-size: 1.6rem; font-weight: 700; color: var(--text-muted); }
 
-.dice-rolling__total {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--text-muted);
-}
-
-.dice-rolling__sep {
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
-}
-
-.dice-rolling__diff {
-  font-size: 1.4rem;
-  color: var(--text-muted);
-}
-
-/* Result */
+/* ── Result phase ── */
 .dice-modal__result {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--sp-4);
 }
 
 .result-banner {
-  font-family: var(--font-serif);
-  font-size: 1.6rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-family: var(--font-ui);
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
   text-align: center;
-  padding: 8px 24px;
-  border-radius: 4px;
+  padding: 10px 28px;
+  text-transform: uppercase;
 }
-
 .result-banner--success {
-  color: var(--accent-yellow);
-  background: var(--accent-yellow-glow);
-  text-shadow: var(--glow-yellow);
+  background: var(--bg-white-bar);
+  color: var(--text-dark);
+  border-bottom: 3px solid var(--amber);
 }
-
 .result-banner--failure {
-  color: var(--accent-red);
-  background: var(--accent-red-glow);
-  text-shadow: var(--glow-red);
+  background: var(--accent-red-dim, #5a1a14);
+  color: #ff9999;
+  border-bottom: 3px solid var(--accent-red);
 }
 
-.dice-result__dice {
-  display: flex;
-  gap: var(--spacing-lg);
-}
+.dice-result__dice { display: flex; gap: var(--sp-5); }
 
 .dice-result__score {
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: var(--sp-3);
+  border: 1px solid var(--border-amber);
+  background: var(--bg-card);
+  padding: var(--sp-2) var(--sp-5);
 }
-
 .dice-result__total {
-  font-family: var(--font-mono);
-  font-size: 2.2rem;
+  font-family: var(--font-ui);
+  font-size: 2.4rem;
   font-weight: 700;
 }
-
 .dice-result__vs {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
   color: var(--text-muted);
+  text-transform: uppercase;
 }
 
 .dice-result__desc {
@@ -233,66 +221,33 @@
   font-size: 0.95rem;
   text-align: center;
   max-width: 280px;
+  font-family: var(--font-body);
 }
 
 .dice-result__skill {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
+  font-family: var(--font-ui);
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .dice-result__confirm {
-  margin-top: var(--spacing-sm);
+  margin-top: var(--sp-2);
   width: 100%;
-  max-width: 220px;
+  max-width: 240px;
+  padding: 12px;
 }
 
-/* Shared button styles */
+/* Actions row */
 .dice-modal__actions {
   display: flex;
-  gap: var(--spacing-sm);
-  margin-top: var(--spacing-md);
+  gap: var(--sp-2);
+  margin-top: var(--sp-4);
 }
-
-.btn-primary {
+.dice-modal__actions .btn-primary,
+.dice-modal__actions .btn-secondary {
   flex: 1;
-  padding: 12px var(--spacing-lg);
-  background: var(--accent-yellow-dim);
-  color: var(--accent-yellow);
-  border: 1px solid var(--accent-yellow-dim);
-  border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  transition: all var(--transition-fast);
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: var(--accent-yellow);
-  color: var(--bg-primary);
-  box-shadow: var(--glow-yellow);
-}
-
-.btn-primary:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  flex: 1;
-  padding: 12px var(--spacing-lg);
-  background: transparent;
-  color: var(--text-muted);
-  border: 1px solid var(--border-muted);
-  border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
-  transition: all var(--transition-fast);
-}
-
-.btn-secondary:hover {
-  border-color: var(--text-muted);
-  color: var(--text-secondary);
+  padding: 12px;
+  justify-content: center;
 }

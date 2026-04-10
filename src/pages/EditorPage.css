@@ -1,3 +1,5 @@
+/* EditorPage — DE-style writing screen */
+
 .editor-page {
   min-height: 100dvh;
   display: flex;
@@ -5,32 +7,31 @@
   background: var(--bg-primary);
 }
 
-/* Editor Header */
+/* Header */
 .editor-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-bottom: 1px solid var(--border-dim);
+  padding: var(--sp-2) var(--sp-4);
+  border-bottom: 1px solid var(--border-amber);
   position: sticky;
   top: 0;
   background: var(--bg-primary);
   z-index: 10;
-  gap: var(--spacing-sm);
+  gap: var(--sp-3);
 }
 
 .editor-header__cancel {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-  padding: 6px 8px;
-  transition: color var(--transition-fast);
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--amber);
+  padding: 6px 4px;
+  transition: color var(--t-fast);
 }
-
-.editor-header__cancel:hover {
-  color: var(--text-secondary);
-}
+.editor-header__cancel:hover { color: var(--amber-bright); }
 
 .editor-header__meta {
   flex: 1;
@@ -41,153 +42,137 @@
   font-family: var(--font-mono);
   font-size: 0.6rem;
   color: var(--text-dim);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
 }
 
 .editor-header__actions {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--sp-2);
 }
 
 .editor-header__dice {
-  font-size: 1.3rem;
-  color: var(--text-dim);
-  padding: 4px 6px;
-  transition: color var(--transition-fast);
+  font-size: 1.2rem;
+  color: var(--amber-dim);
+  padding: 5px;
+  transition: color var(--t-fast);
 }
+.editor-header__dice:hover { color: var(--amber); }
 
-.editor-header__dice:hover {
-  color: var(--accent-yellow);
-}
-
+/* Save button — white bar style */
 .editor-header__save {
-  padding: 8px 16px;
-  background: var(--accent-yellow-dim);
-  color: var(--accent-yellow);
-  border: 1px solid var(--accent-yellow-dim);
-  border-radius: 3px;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.06em;
+  padding: 7px 16px;
+  background: var(--bg-white-bar);
+  color: var(--text-dark);
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
   font-weight: 700;
-  transition: all var(--transition-fast);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: background var(--t-fast), opacity var(--t-fast);
 }
-
-.editor-header__save:hover:not(:disabled) {
-  background: var(--accent-yellow);
-  color: var(--bg-primary);
-}
-
-.editor-header__save:disabled {
-  opacity: 0.35;
-  cursor: not-allowed;
-}
-
-.editor-header__save--saving {
-  opacity: 0.6;
-}
+.editor-header__save:hover:not(:disabled) { background: #e0dcc8; }
+.editor-header__save:disabled { opacity: 0.35; cursor: not-allowed; }
+.editor-header__save--saving { opacity: 0.6; }
 
 /* Editor body */
 .editor-body {
   flex: 1;
-  padding: var(--spacing-md);
+  padding: var(--sp-4);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
+  gap: var(--sp-3);
 }
 
-/* Mood */
+/* Mood selector */
 .editor-mood {
   display: flex;
-  gap: 6px;
+  gap: 3px;
   flex-wrap: wrap;
 }
 
 .mood-btn {
-  padding: 5px 12px;
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  font-family: var(--font-ui);
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   color: var(--text-dim);
-  border: 1px solid var(--border-dim);
-  border-radius: 2px;
-  transition: all var(--transition-fast);
+  border: 1px solid var(--border-muted);
+  transition: all var(--t-fast);
 }
-
 .mood-btn:hover {
   border-color: var(--mood-color, var(--border-muted));
   color: var(--mood-color, var(--text-muted));
 }
-
 .mood-btn--active {
   border-color: var(--mood-color);
   color: var(--mood-color);
-  background: color-mix(in srgb, var(--mood-color) 10%, transparent);
+  background: color-mix(in srgb, var(--mood-color) 12%, transparent);
 }
 
-/* Title */
+/* Title input */
 .editor-title {
   width: 100%;
   background: transparent;
   border: none;
-  border-bottom: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-amber);
   border-radius: 0;
-  font-family: var(--font-serif);
-  font-size: 1.3rem;
-  font-weight: 600;
+  font-family: var(--font-ui);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--text-primary);
-  padding: var(--spacing-xs) 0 var(--spacing-sm);
+  padding: var(--sp-1) 0 var(--sp-2);
   outline: none;
+  box-shadow: none;
 }
-
 .editor-title::placeholder {
   color: var(--text-dim);
   font-weight: 400;
+  text-transform: uppercase;
 }
 
 /* Content textarea */
 .editor-content {
   width: 100%;
-  min-height: 200px;
+  min-height: 220px;
   background: transparent;
   border: none;
+  border-bottom: 1px solid var(--border-dim);
   resize: none;
   font-family: var(--font-body);
   font-size: 1rem;
-  line-height: 1.75;
+  line-height: 1.8;
   color: var(--text-secondary);
-  padding: var(--spacing-sm) 0;
+  padding: var(--sp-2) 0;
   outline: none;
+  box-shadow: none;
 }
-
-.editor-content::placeholder {
-  color: var(--text-dim);
-  font-style: italic;
-}
+.editor-content::placeholder { color: var(--text-dim); font-style: italic; }
 
 /* Floating dice button */
 .editor-float-dice {
   position: fixed;
-  bottom: calc(var(--spacing-xl) + env(safe-area-inset-bottom, 0px));
-  right: var(--spacing-lg);
+  bottom: calc(var(--sp-8) + env(safe-area-inset-bottom, 0px));
+  right: var(--sp-5);
   width: 52px;
   height: 52px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-muted);
-  border-radius: 50%;
-  font-size: 1.5rem;
-  color: var(--text-muted);
+  background: var(--bg-white-bar);
+  border: 1px solid var(--border-amber);
+  font-size: 1.4rem;
+  color: var(--text-dark);
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: var(--shadow-float);
-  transition: all var(--transition-fast);
+  transition: all var(--t-fast);
   z-index: 50;
 }
-
 .editor-float-dice:hover {
-  color: var(--accent-yellow);
-  border-color: var(--accent-yellow-dim);
-  box-shadow: var(--glow-yellow), var(--shadow-float);
+  background: var(--bg-card);
+  color: var(--amber);
+  border-color: var(--amber);
 }

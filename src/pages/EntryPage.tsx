@@ -8,14 +8,15 @@ import { SkillPanel } from '../components/skills/SkillPanel';
 import { CheckCard } from '../components/dice/CheckCard';
 import './EntryPage.css';
 
-const MOOD_COLORS = {
-  hopeful: '#27ae60', neutral: '#7a7060', troubled: '#d4a843', numb: '#2e86ab',
+const MOOD_COLORS: Record<string, string> = {
+  hopeful: '#27ae60', neutral: '#7a7060', troubled: '#c4782a',
+  numb: '#2e86ab', angry: '#c0392b', nostalgic: '#8b4fd4',
+  anxious: '#d4a024', determined: '#3a8fd4',
 };
 
 function formatFullDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
-    hour: '2-digit', minute: '2-digit',
   });
 }
 
@@ -24,23 +25,15 @@ export function EntryPage() {
   const navigate = useNavigate();
   const { entries, deleteEntry, regenerateComments } = useJournalStore();
   const { openModal } = useDiceStore();
-
-  const entry = entries.find(e => e.id === id);
   const [regenerating, setRegenerating] = useState(false);
 
-  useEffect(() => {
-    if (!entry && entries.length > 0) navigate('/');
-  }, [entry, entries.length, navigate]);
-
+  const entry = entries.find(e => e.id === id);
+  useEffect(() => { if (!entry && entries.length > 0) navigate('/'); }, [entry, entries.length, navigate]);
   if (!entry) return null;
 
   const handleDelete = async () => {
-    if (confirm('Delete this entry?')) {
-      await deleteEntry(entry.id);
-      navigate('/');
-    }
+    if (confirm('Delete this entry?')) { await deleteEntry(entry.id); navigate('/'); }
   };
-
   const handleRegenerate = async () => {
     setRegenerating(true);
     await regenerateComments(entry.id);
@@ -51,80 +44,57 @@ export function EntryPage() {
     <div className="entry-page animate-page-in">
       <PageHeader
         title={entry.title || 'Untitled Entry'}
+        icon="◈"
         backPath="/"
         actions={
           <div className="entry-page__header-actions">
-            <button
-              className="entry-action-btn"
-              onClick={() => navigate(`/edit/${entry.id}`)}
-              title="Edit"
-            >
-              ✎
-            </button>
-            <button
-              className="entry-action-btn entry-action-btn--dice"
-              onClick={() => openModal(entry.id)}
-              title="Roll a check"
-            >
-              ⚄
-            </button>
-            <button
-              className="entry-action-btn entry-action-btn--danger"
-              onClick={handleDelete}
-              title="Delete"
-            >
-              ✕
-            </button>
+            <button className="entry-action-btn" onClick={() => navigate(`/edit/${entry.id}`)} title="Edit">✎</button>
+            <button className="entry-action-btn entry-action-btn--dice" onClick={() => openModal(entry.id)} title="Roll check">⚄</button>
+            <button className="entry-action-btn entry-action-btn--danger" onClick={handleDelete} title="Delete">✕</button>
           </div>
         }
       />
 
       <div className="entry-page__body">
-        {/* Meta */}
+        {/* Meta fields — Case Files style */}
         <div className="entry-meta">
           <span className="entry-meta__date">{formatFullDate(entry.createdAt)}</span>
           {entry.mood && (
-            <span
-              className="entry-meta__mood"
-              style={{ color: MOOD_COLORS[entry.mood] }}
-            >
+            <span className="entry-meta__mood" style={{ color: MOOD_COLORS[entry.mood] ?? 'var(--amber)' }}>
               {entry.mood}
             </span>
           )}
         </div>
 
-        {/* Content */}
+        {/* Body content in amber-bordered box */}
         <motion.div
-          className="entry-content"
+          className="entry-content-box"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.05 }}
+          transition={{ duration: 0.25, delay: 0.05 }}
         >
-          {entry.content.split('\n').map((para, i) => (
-            para.trim() ? <p key={i}>{para}</p> : <br key={i} />
-          ))}
+          <div className="entry-content-box__label">Entry</div>
+          <div className="entry-content">
+            {entry.content.split('\n').map((para, i) =>
+              para.trim() ? <p key={i}>{para}</p> : <br key={i} />
+            )}
+          </div>
         </motion.div>
 
-        {/* Dice checks */}
+        {/* Skill Checks */}
         {entry.checks.length > 0 && (
           <section className="entry-section">
-            <h3 className="entry-section__title">Skill Checks</h3>
-            {entry.checks.map(check => (
-              <CheckCard key={check.id} check={check} />
-            ))}
+            <h3 className="entry-section__title">⚄ Skill Checks</h3>
+            {entry.checks.map(check => <CheckCard key={check.id} check={check} />)}
           </section>
         )}
 
-        {/* Skill voices */}
+        {/* Skill Voices */}
         <SkillPanel comments={entry.skillComments} animate={false} />
 
-        {/* Regenerate voices */}
+        {/* Regenerate */}
         <div className="entry-regen">
-          <button
-            className="entry-regen__btn"
-            onClick={handleRegenerate}
-            disabled={regenerating}
-          >
+          <button className="entry-regen__btn" onClick={handleRegenerate} disabled={regenerating}>
             {regenerating ? 'Generating…' : '↻ Regenerate voices'}
           </button>
         </div>

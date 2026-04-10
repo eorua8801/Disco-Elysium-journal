@@ -23,6 +23,7 @@ export function CheckCard({ check }: CheckCardProps) {
         </span>
       </div>
 
+      <div className="check-card__body">
       <div className="check-card__desc">{check.description}</div>
 
       <div className="check-card__roll">
@@ -35,6 +36,7 @@ export function CheckCard({ check }: CheckCardProps) {
         <span className="check-card__vs">
           vs {check.difficulty} ({getDifficultyLabel(check.difficulty)})
         </span>
+      </div>
       </div>
     </div>
   );

@@ -4,11 +4,12 @@ import './PageHeader.css';
 interface PageHeaderProps {
   title: string;
   subtitle?: string;
+  icon?: string;
   backPath?: string;
   actions?: React.ReactNode;
 }
 
-export function PageHeader({ title, subtitle, backPath, actions }: PageHeaderProps) {
+export function PageHeader({ title, subtitle, icon, backPath, actions }: PageHeaderProps) {
   const navigate = useNavigate();
 
   return (
@@ -20,10 +21,11 @@ export function PageHeader({ title, subtitle, backPath, actions }: PageHeaderPro
           </button>
         )}
         <div className="page-header__text">
+          {icon && <span className="page-header__icon">{icon}</span>}
           <h1 className="page-header__title">{title}</h1>
-          {subtitle && <p className="page-header__subtitle">{subtitle}</p>}
         </div>
       </div>
+      {subtitle && <span className="page-header__subtitle" style={{ marginLeft: 'auto', marginRight: 8 }}>{subtitle}</span>}
       {actions && <div className="page-header__actions">{actions}</div>}
     </header>
   );
