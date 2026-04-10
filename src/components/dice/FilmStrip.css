@@ -2,8 +2,8 @@
 
 .film-strip {
   display: flex;
-  background: #080604;
-  border: 1px solid #2a1e10;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-dim);
   width: 86px;
   flex-shrink: 0;
   overflow: hidden;
@@ -19,12 +19,12 @@
   align-items: center;
   justify-content: space-around;
   padding: 10px 0;
-  background: #0d0a06;
-  border-right: 1px solid #1e1408;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-dim);
 }
 .film-strip__sprockets:last-child {
   border-right: none;
-  border-left: 1px solid #1e1408;
+  border-left: 1px solid var(--border-dim);
 }
 
 .film-sprocket {
@@ -32,7 +32,7 @@
   height: 5px;
   border-radius: 1px;
   background: transparent;
-  border: 1px solid #2e2010;
+  border: 1px solid var(--border-muted);
 }
 
 /* ── Scrolling window ── */
@@ -55,11 +55,11 @@
 }
 .film-strip__window::before {
   top: 0;
-  background: linear-gradient(to bottom, #080604 0%, transparent 100%);
+  background: linear-gradient(to bottom, var(--bg-primary) 0%, transparent 100%);
 }
 .film-strip__window::after {
   bottom: 0;
-  background: linear-gradient(to top, #080604 0%, transparent 100%);
+  background: linear-gradient(to top, var(--bg-primary) 0%, transparent 100%);
 }
 
 /* ── Track ── */
@@ -82,7 +82,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 1px solid #1a1208;
+  border-bottom: 1px solid var(--border-dim);
 }
 
 .film-frame__num {

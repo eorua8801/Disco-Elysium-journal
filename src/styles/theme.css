@@ -3,10 +3,10 @@
 
 :root {
   /* ── Backgrounds (warm dark brown, not pure black) ── */
-  --bg-primary:   #0d0b08;
-  --bg-surface:   #141008;
-  --bg-card:      #1c1710;
-  --bg-card-hover:#222018;
+  --bg-primary:   #1a1610;
+  --bg-surface:   #211c12;
+  --bg-card:      #2a2318;
+  --bg-card-hover:#322b1e;
   --bg-overlay:   rgba(8, 6, 3, 0.88);
   --bg-white-bar: #f0ece0;   /* the white section header bar */
 
@@ -18,9 +18,9 @@
 
   /* ── Text ── */
   --text-primary: #ede0c8;
-  --text-secondary:#b0a080;
-  --text-muted:   #6a5840;
-  --text-dim:     #3a2e20;
+  --text-secondary:#c0aa88;
+  --text-muted:   #8c7458;
+  --text-dim:     #6a5840;
   --text-dark:    #120e08;   /* for text on white bars */
   --text-white:   #f0ece0;
 
@@ -40,8 +40,8 @@
   --accent-green:   #27ae60;
 
   /* ── Borders ── */
-  --border-dim:    #2a2010;
-  --border-muted:  #3a3020;
+  --border-dim:    #3a3020;
+  --border-muted:  #4a3e28;
   --border-amber:  var(--amber);
   --border-white:  #e0dcc8;
 
