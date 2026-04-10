@@ -2,11 +2,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Share+Tech+Mono&display=swap');
 
 :root {
-  /* ── Backgrounds (warm dark brown, not pure black) ── */
-  --bg-primary:   #1a1610;
-  --bg-surface:   #211c12;
-  --bg-card:      #2a2318;
-  --bg-card-hover:#322b1e;
+  /* ── Backgrounds (warm dark orange-brown) ── */
+  --bg-primary:   #22180a;
+  --bg-surface:   #2c1e10;
+  --bg-card:      #362514;
+  --bg-card-hover:#40301a;
   --bg-overlay:   rgba(8, 6, 3, 0.88);
   --bg-white-bar: #f0ece0;   /* the white section header bar */
 
