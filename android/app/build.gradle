@@ -42,9 +42,10 @@ dependencies {
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
     implementation project(':capacitor-android')
     // On-device LLM inference — LiteRT-LM (Gemma 4 E2B)
+    // litertlm-android 0.10.0 requires Kotlin 2.3.x metadata
     implementation 'com.google.ai.edge.litertlm:litertlm-android:latest.release'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.21'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
+    // kotlin-stdlib is added automatically by kotlin-android plugin; no explicit pin needed
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.1'
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
