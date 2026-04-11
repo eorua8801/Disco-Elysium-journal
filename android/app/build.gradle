@@ -1,9 +1,10 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     namespace = "com.discojounal.app"
     packagingOptions {
-        // MediaPipe ships native .so files; pick the first copy to avoid duplicate conflicts
+        // LiteRT-LM ships native .so files; pick the first copy to avoid duplicate conflicts
         pickFirst 'lib/**/*.so'
     }
     compileSdk = rootProject.ext.compileSdkVersion
@@ -40,8 +41,10 @@ dependencies {
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
     implementation project(':capacitor-android')
-    // On-device LLM inference — MediaPipe tasks-genai (Gemma 3 1B INT4)
-    implementation 'com.google.mediapipe:tasks-genai:0.10.22'
+    // On-device LLM inference — LiteRT-LM (Gemma 4 E2B)
+    implementation 'com.google.ai.edge.litertlm:litertlm-android:latest.release'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:2.0.21'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0'
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
