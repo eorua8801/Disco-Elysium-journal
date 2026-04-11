@@ -61,8 +61,8 @@ export interface AppSettings {
   ollamaEnabled: boolean;
   ollamaUrl: string;
   ollamaModel: string;
-  activeSkillIds: string[];
-  scanlinesEnabled: boolean;
+  activeSkills: string[];
+  scanlines: boolean;
   locale: 'en' | 'ko';
   onDeviceEnabled: boolean;
 }

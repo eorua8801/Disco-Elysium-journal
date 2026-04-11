@@ -1,8 +1,16 @@
 import { create } from 'zustand';
-import type { AppSettings } from '../types';
 import { getAllSettings, setSetting } from '../db/indexedDB';
 
-interface SettingsStore extends AppSettings {
+interface SettingsStore {
+  // AppSettings fields (inlined to avoid Zustand 5.x type-inference issues with extends)
+  ollamaEnabled: boolean;
+  ollamaUrl: string;
+  ollamaModel: string;
+  activeSkills: string[];
+  scanlines: boolean;
+  locale: 'en' | 'ko';
+  onDeviceEnabled: boolean;
+  // Store-specific fields
   loaded: boolean;
   loadSettings: () => Promise<void>;
   setOllamaEnabled: (v: boolean) => void;

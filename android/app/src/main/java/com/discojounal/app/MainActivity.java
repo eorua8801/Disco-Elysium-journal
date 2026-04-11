@@ -10,11 +10,15 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         registerPlugin(OnDeviceLLMPlugin.class);
+
+        // Must be called BEFORE super.onCreate() (which calls setContentView).
+        // This opts the window into edge-to-edge layout so we can hide system bars.
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
         super.onCreate(savedInstanceState);
 
-        // Full immersive mode: hide status bar + navigation bar.
-        // Swiping from screen edge temporarily reveals them (game-style).
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        // Hide status bar + navigation bar (game-style immersive).
+        // Swipe from screen edge temporarily reveals them.
         WindowInsetsControllerCompat insetsCtrl =
             WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
         insetsCtrl.hide(WindowInsetsCompat.Type.systemBars());
