@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { JournalEntry, DiceCheck } from '../types';
+import type { JournalEntry, DiceCheck, SubTaskStatus } from '../types';
 import { getAllEntries, saveEntry, deleteEntry } from '../db/indexedDB';
 import { generateSkillComments } from '../utils/aiComments';
 
@@ -12,6 +12,16 @@ interface JournalStore {
   deleteEntry: (id: string) => Promise<void>;
   attachCheck: (entryId: string, check: DiceCheck) => Promise<void>;
   regenerateComments: (entryId: string) => Promise<void>;
+  updateSubTaskStatus: (entryId: string, taskIdx: number, subIdx: number, status: SubTaskStatus) => Promise<void>;
+}
+
+/** Ensure backward-compat: old entries without tasks/characters get empty arrays */
+function normalize(entry: JournalEntry): JournalEntry {
+  return {
+    ...entry,
+    tasks:      (entry.tasks      as typeof entry.tasks      | undefined) ?? [],
+    characters: (entry.characters as typeof entry.characters | undefined) ?? [],
+  };
 }
 
 export const useJournalStore = create<JournalStore>((set, get) => ({
@@ -20,7 +30,7 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
 
   loadEntries: async () => {
     set({ loading: true });
-    const entries = await getAllEntries();
+    const entries = (await getAllEntries()).map(normalize);
     set({ entries, loading: false });
   },
 
@@ -32,12 +42,15 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
       updatedAt: now,
       skillComments: [],
       checks: [],
+      tasks: [],
+      characters: [],
       ...data,
     };
 
-    // Generate skill comments in background
-    const comments = await generateSkillComments(entry.content, entry.checks);
-    entry.skillComments = comments;
+    const result = await generateSkillComments(entry.content, entry.checks);
+    entry.skillComments = result.skillComments;
+    entry.tasks        = result.tasks;
+    entry.characters   = result.characters;
 
     await saveEntry(entry);
     set(state => ({ entries: [entry, ...state.entries] }));
@@ -54,9 +67,11 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
       updatedAt: new Date().toISOString(),
     };
 
-    // Regenerate comments if content changed
     if (data.content && data.content !== entry.content) {
-      updated.skillComments = await generateSkillComments(updated.content, updated.checks);
+      const result = await generateSkillComments(updated.content, updated.checks);
+      updated.skillComments = result.skillComments;
+      updated.tasks        = result.tasks;
+      updated.characters   = result.characters;
     }
 
     await saveEntry(updated);
@@ -82,8 +97,10 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
       updatedAt: new Date().toISOString(),
     };
 
-    // Regenerate comments with new check context
-    updated.skillComments = await generateSkillComments(updated.content, updated.checks);
+    const result = await generateSkillComments(updated.content, updated.checks);
+    updated.skillComments = result.skillComments;
+    updated.tasks        = result.tasks;
+    updated.characters   = result.characters;
 
     await saveEntry(updated);
     set(state => ({
@@ -95,9 +112,35 @@ export const useJournalStore = create<JournalStore>((set, get) => ({
     const entry = get().entries.find(e => e.id === entryId);
     if (!entry) return;
 
-    const comments = await generateSkillComments(entry.content, entry.checks);
-    const updated: JournalEntry = { ...entry, skillComments: comments };
+    const result = await generateSkillComments(entry.content, entry.checks);
+    const updated: JournalEntry = {
+      ...entry,
+      skillComments: result.skillComments,
+      tasks:         result.tasks,
+      characters:    result.characters,
+    };
 
+    await saveEntry(updated);
+    set(state => ({
+      entries: state.entries.map(e => e.id === entryId ? updated : e),
+    }));
+  },
+
+  updateSubTaskStatus: async (entryId, taskIdx, subIdx, status) => {
+    const entry = get().entries.find(e => e.id === entryId);
+    if (!entry) return;
+
+    const tasks = entry.tasks.map((task, ti) => {
+      if (ti !== taskIdx) return task;
+      return {
+        ...task,
+        subTasks: task.subTasks.map((sub, si) =>
+          si === subIdx ? { ...sub, status } : sub
+        ),
+      };
+    });
+
+    const updated: JournalEntry = { ...entry, tasks, updatedAt: new Date().toISOString() };
     await saveEntry(updated);
     set(state => ({
       entries: state.entries.map(e => e.id === entryId ? updated : e),

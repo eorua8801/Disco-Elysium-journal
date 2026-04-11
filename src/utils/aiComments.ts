@@ -1,13 +1,14 @@
-import type { SkillComment, DiceCheck } from '../types';
+import type { SkillComment, DiceCheck, Task, Character } from '../types';
 import { SKILLS_BY_ID } from '../data/skills';
 import { generateTemplateComments } from './skillMatcher';
 import { useSettingsStore } from '../store/settingsStore';
 import { getT } from '../i18n';
 import { OnDeviceLLM } from '../plugins/OnDeviceLLM';
 import { Capacitor } from '@capacitor/core';
+import { analyzeWithGemini } from './geminiAnalysis';
 
 // ---------------------------------------------------------------------------
-// Skill voice style descriptions (used in both EN and KO prompts)
+// Skill voice style descriptions (used in Ollama / on-device prompts)
 // ---------------------------------------------------------------------------
 const STYLE_EN: Record<string, string> = {
   'logic':               'coldly analytical, uses numbered observations and deductive language',
@@ -64,8 +65,7 @@ const STYLE_KO: Record<string, string> = {
 };
 
 // ---------------------------------------------------------------------------
-// Prompt builders — optimised for small models (Gemma 4 1B etc.)
-// Short, direct, single-task instructions work best for sub-3B models.
+// Prompt builders — for Ollama / on-device (small models)
 // ---------------------------------------------------------------------------
 function buildPromptEn(skillId: string, entryText: string): string {
   const skill = SKILLS_BY_ID[skillId];
@@ -96,7 +96,7 @@ function buildPromptKo(skillId: string, entryText: string): string {
 }
 
 // ---------------------------------------------------------------------------
-// On-device inference (MediaPipe / Gemma 3 1B) — Android only
+// On-device inference (LiteRT-LM / Gemma 4 E2B) — Android only
 // ---------------------------------------------------------------------------
 async function fetchOnDeviceComment(
   skillId: string,
@@ -143,14 +143,9 @@ async function fetchOllamaComment(
         model,
         prompt,
         stream: false,
-        options: {
-          temperature: 0.85,
-          num_predict: 90,   // enough for 1-2 sentences
-          top_p: 0.92,
-        },
+        options: { temperature: 0.85, num_predict: 90, top_p: 0.92 },
       }),
     });
-
     if (!response.ok) return null;
     const data = await response.json();
     return data.response?.trim() || null;
@@ -162,31 +157,70 @@ async function fetchOllamaComment(
 }
 
 // ---------------------------------------------------------------------------
+// Full analysis result (returned to journalStore)
+// ---------------------------------------------------------------------------
+export interface AnalysisResult {
+  skillComments: SkillComment[];
+  tasks: Task[];
+  characters: Character[];
+}
+
+// ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
 export async function generateSkillComments(
   content: string,
   checks: DiceCheck[],
-): Promise<SkillComment[]> {
-  if (!content.trim()) return [];
+): Promise<AnalysisResult> {
+  if (!content.trim()) return { skillComments: [], tasks: [], characters: [] };
 
-  const { ollamaEnabled, ollamaUrl, ollamaModel, locale, onDeviceEnabled } =
-    useSettingsStore.getState();
+  const {
+    ollamaEnabled, ollamaUrl, ollamaModel,
+    locale, onDeviceEnabled,
+    geminiEnabled, geminiApiKey, geminiModel,
+  } = useSettingsStore.getState();
+
+  // ── Gemini path: full structured analysis ──────────────────────────────
+  if (geminiEnabled && geminiApiKey) {
+    const analysis = await analyzeWithGemini(content, geminiApiKey, geminiModel, locale);
+    if (analysis) {
+      const skillComments: SkillComment[] = analysis.reflections.map(r => ({
+        id: crypto.randomUUID(),
+        // Try to find a skill by name match, fall back to a skill from the color group
+        skillId: findSkillIdByName(r.skill, r.color),
+        text: r.text,
+        source: 'ollama' as const,  // 'ollama' = AI-generated (Gemini counts)
+        triggeredAt: new Date().toISOString(),
+      }));
+
+      return {
+        skillComments,
+        tasks: analysis.tasks,
+        characters: analysis.characters,
+      };
+    }
+    // Fall through to Ollama/template if Gemini failed
+  }
+
+  // ── Ollama / on-device path: per-skill comments ─────────────────────────
   const templateResults = generateTemplateComments(content, checks, 3);
-
-  // Priority: on-device > Ollama > templates
   const useOnDevice = onDeviceEnabled && Capacitor.isNativePlatform();
 
   if (!useOnDevice && !ollamaEnabled) {
-    return templateResults.map(r => ({
-      skillId: r.skillId,
-      text: r.text,
-      source: 'template' as const,
-      triggeredAt: new Date().toISOString(),
-    }));
+    return {
+      skillComments: templateResults.map(r => ({
+        id: crypto.randomUUID(),
+        skillId: r.skillId,
+        text: r.text,
+        source: 'template' as const,
+        triggeredAt: new Date().toISOString(),
+      })),
+      tasks: [],
+      characters: [],
+    };
   }
 
-  const comments: SkillComment[] = await Promise.all(
+  const skillComments: SkillComment[] = await Promise.all(
     templateResults.map(async (r) => {
       let aiText: string | null = null;
 
@@ -198,15 +232,46 @@ export async function generateSkillComments(
       }
 
       return {
+        id: crypto.randomUUID(),
         skillId: r.skillId,
         text: aiText ?? r.text,
-        source: (aiText
-          ? (useOnDevice && aiText ? 'ollama' : 'ollama')
-          : 'template') as 'ollama' | 'template',
+        source: (aiText ? 'ollama' : 'template') as 'ollama' | 'template',
         triggeredAt: new Date().toISOString(),
       };
     })
   );
 
-  return comments;
+  return { skillComments, tasks: [], characters: [] };
+}
+
+// ---------------------------------------------------------------------------
+// Helper: find skill ID by display name or fall back to stat group
+// ---------------------------------------------------------------------------
+import { SKILLS } from '../data/skills';
+
+const GEMINI_COLOR_TO_SKILL_IDS: Record<string, string[]> = {
+  intellect: ['logic', 'encyclopedia', 'rhetoric', 'drama', 'conceptualization', 'visual-calculus'],
+  psyche:    ['volition', 'inland-empire', 'empathy', 'authority', 'esprit-de-corps', 'suggestion'],
+  physique:  ['endurance', 'pain-threshold', 'physical-instrument', 'electrochemistry', 'shivers', 'half-light'],
+  motorics:  ['hand-eye-coordination', 'perception', 'reaction-speed', 'savoir-faire', 'interfacing', 'composure'],
+};
+
+function findSkillIdByName(name: string, color: string): string {
+  const nameLower = name.toLowerCase().replace(/[\s_]/g, '-');
+
+  // Direct ID match
+  const byId = SKILLS.find(s => s.id === nameLower);
+  if (byId) return byId.id;
+
+  // Name match (EN or KO)
+  const byName = SKILLS.find(s =>
+    s.name.toLowerCase() === name.toLowerCase() ||
+    s.id.replace(/-/g, '') === nameLower.replace(/-/g, '')
+  );
+  if (byName) return byName.id;
+
+  // Fall back: pick a random skill from the color group
+  const group = GEMINI_COLOR_TO_SKILL_IDS[color.toLowerCase()] ?? GEMINI_COLOR_TO_SKILL_IDS['psyche'];
+  const idx = Math.floor(Math.random() * group.length);
+  return group[idx];
 }

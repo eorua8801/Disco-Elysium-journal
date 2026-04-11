@@ -8,6 +8,7 @@ import { PageHeader } from '../components/layout/PageHeader';
 import { SkillPanel } from '../components/skills/SkillPanel';
 import { CheckCard } from '../components/dice/CheckCard';
 import { useT } from '../i18n';
+import type { SubTaskStatus } from '../types';
 import './EntryPage.css';
 
 const MOOD_COLORS: Record<string, string> = {
@@ -25,7 +26,7 @@ function formatFullDate(iso: string, locale: 'en' | 'ko'): string {
 export function EntryPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { entries, deleteEntry, regenerateComments } = useJournalStore();
+  const { entries, deleteEntry, regenerateComments, updateSubTaskStatus } = useJournalStore();
   const { openModal } = useDiceStore();
   const { locale } = useSettingsStore();
   const T = useT();
@@ -87,6 +88,58 @@ export function EntryPage() {
           <section className="entry-section">
             <h3 className="entry-section__title">{T.entry.skillChecks}</h3>
             {entry.checks.map(check => <CheckCard key={check.id} check={check} />)}
+          </section>
+        )}
+
+        {entry.tasks && entry.tasks.length > 0 && (
+          <section className="entry-section entry-section--tasks">
+            <h3 className="entry-section__title">{T.entry.tasks}</h3>
+            {entry.tasks.map((task, ti) => (
+              <div key={ti} className="entry-task">
+                <div className="entry-task__header">
+                  <span className="entry-task__title">{task.title}</span>
+                </div>
+                {task.description && (
+                  <p className="entry-task__desc">{task.description}</p>
+                )}
+                {task.subTasks.length > 0 && (
+                  <ul className="entry-task__subs">
+                    {task.subTasks.map((sub, si) => (
+                      <li key={si} className={`entry-subtask entry-subtask--${sub.status}`}>
+                        <button
+                          className="entry-subtask__status"
+                          title={T.entry.subTaskStatus[sub.status]}
+                          onClick={() => {
+                            const cycle: SubTaskStatus[] = ['active', 'success', 'failure', 'deferred'];
+                            const next = cycle[(cycle.indexOf(sub.status) + 1) % cycle.length];
+                            updateSubTaskStatus(entry.id, ti, si, next);
+                          }}
+                        >
+                          {sub.status === 'success'  ? '✓' :
+                           sub.status === 'failure'  ? '✕' :
+                           sub.status === 'deferred' ? '⊘' : '○'}
+                        </button>
+                        <span className="entry-subtask__title">{sub.title}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </section>
+        )}
+
+        {entry.characters && entry.characters.length > 0 && (
+          <section className="entry-section entry-section--characters">
+            <h3 className="entry-section__title">{T.entry.characters}</h3>
+            <div className="entry-characters">
+              {entry.characters.map((char, ci) => (
+                <div key={ci} className="entry-character">
+                  <span className="entry-character__name">{char.name}</span>
+                  <span className="entry-character__desc">{char.description}</span>
+                </div>
+              ))}
+            </div>
           </section>
         )}
 

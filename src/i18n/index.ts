@@ -41,6 +41,9 @@ interface Translations {
     regenerate: string;
     regenerating: string;
     confirmDelete: string;
+    tasks: string;
+    characters: string;
+    subTaskStatus: Record<string, string>;
   };
   skills: {
     title: string;
@@ -83,6 +86,12 @@ interface Translations {
     downloading: (pct: number) => string;
     cancelDownload: string;
     deleteModel: string;
+    geminiTitle: string;
+    geminiDesc: string;
+    geminiApiKey: string;
+    geminiApiKeyHint: string;
+    geminiModel: string;
+    geminiModelHint: string;
     displayTitle: string;
     scanlines: string;
     scanlinesDesc: string;
@@ -137,6 +146,14 @@ const en: Translations = {
     regenerate:    '↻ Regenerate voices',
     regenerating:  'Generating…',
     confirmDelete: 'Delete this entry?',
+    tasks:         '◈ Active Missions',
+    characters:    '◎ Characters Encountered',
+    subTaskStatus: {
+      active:   'Active',
+      success:  'Success',
+      failure:  'Failure',
+      deferred: 'Deferred',
+    },
   },
   skills: {
     title:  'Skills',
@@ -216,6 +233,12 @@ const en: Translations = {
     downloading: (pct) => `Downloading… ${pct}%`,
     cancelDownload: 'Cancel',
     deleteModel: 'Delete model',
+    geminiTitle:      'Gemini AI (Full Analysis)',
+    geminiDesc:       'Use Google Gemini to analyze entries and extract skill voices, missions, and characters. Requires a free API key from Google AI Studio.',
+    geminiApiKey:     'API Key',
+    geminiApiKeyHint: 'Get a free key at aistudio.google.com',
+    geminiModel:      'Model',
+    geminiModelHint:  'Default: gemini-2.0-flash (fast & free tier)',
     displayTitle: 'Display',
     scanlines:    'Scanlines',
     scanlinesDesc:'CRT scanline overlay effect',
@@ -270,6 +293,14 @@ const ko: Translations = {
     regenerate:    '↻ 목소리 재생성',
     regenerating:  '생성 중…',
     confirmDelete: '이 항목을 삭제하시겠습니까?',
+    tasks:         '◈ 진행 중인 임무',
+    characters:    '◎ 등장인물',
+    subTaskStatus: {
+      active:   '진행',
+      success:  '성공',
+      failure:  '실패',
+      deferred: '유예',
+    },
   },
   skills: {
     title:  '기술',
@@ -349,6 +380,12 @@ const ko: Translations = {
     downloading: (pct) => `다운로드 중… ${pct}%`,
     cancelDownload: '취소',
     deleteModel: '모델 삭제',
+    geminiTitle:      'Gemini AI (전체 분석)',
+    geminiDesc:       'Google Gemini로 일기를 분석해 기술 목소리, 임무, 인물을 추출합니다. Google AI Studio에서 무료 API 키를 발급받으세요.',
+    geminiApiKey:     'API 키',
+    geminiApiKeyHint: 'aistudio.google.com에서 무료 키 발급',
+    geminiModel:      '모델',
+    geminiModelHint:  '기본값: gemini-2.0-flash (빠르고 무료 티어)',
     displayTitle: '화면',
     scanlines:    '스캔라인',
     scanlinesDesc:'CRT 스캔라인 오버레이 효과',

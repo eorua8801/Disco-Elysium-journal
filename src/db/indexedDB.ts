@@ -63,14 +63,25 @@ export async function setSetting<T>(key: string, value: T): Promise<void> {
 }
 
 export async function getAllSettings(): Promise<AppSettings> {
-  const [ollamaEnabled, ollamaUrl, ollamaModel, activeSkills, locale, scanlines] =
-    await Promise.all([
-      getSetting('ollamaEnabled', false),
-      getSetting('ollamaUrl', 'http://localhost:11434'),
-      getSetting('ollamaModel', 'phi3:mini'),
-      getSetting<string[]>('activeSkills', []),
-      getSetting<'en' | 'ko'>('locale', 'en'),
-      getSetting('scanlines', true),
-    ]);
-  return { ollamaEnabled, ollamaUrl, ollamaModel, activeSkills, locale, scanlines };
+  const [
+    ollamaEnabled, ollamaUrl, ollamaModel,
+    activeSkills, locale, scanlines, onDeviceEnabled,
+    geminiEnabled, geminiApiKey, geminiModel,
+  ] = await Promise.all([
+    getSetting('ollamaEnabled', false),
+    getSetting('ollamaUrl', 'http://localhost:11434'),
+    getSetting('ollamaModel', 'phi3:mini'),
+    getSetting<string[]>('activeSkills', []),
+    getSetting<'en' | 'ko'>('locale', 'en'),
+    getSetting('scanlines', true),
+    getSetting('onDeviceEnabled', false),
+    getSetting('geminiEnabled', false),
+    getSetting('geminiApiKey', ''),
+    getSetting('geminiModel', 'gemini-2.0-flash'),
+  ]);
+  return {
+    ollamaEnabled, ollamaUrl, ollamaModel,
+    activeSkills, locale, scanlines, onDeviceEnabled,
+    geminiEnabled, geminiApiKey, geminiModel,
+  };
 }

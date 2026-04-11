@@ -10,6 +10,9 @@ interface SettingsStore {
   scanlines: boolean;
   locale: 'en' | 'ko';
   onDeviceEnabled: boolean;
+  geminiEnabled: boolean;
+  geminiApiKey: string;
+  geminiModel: string;
   // Store-specific fields
   loaded: boolean;
   loadSettings: () => Promise<void>;
@@ -20,6 +23,9 @@ interface SettingsStore {
   setLocale: (v: 'en' | 'ko') => void;
   setScanlines: (v: boolean) => void;
   setOnDeviceEnabled: (v: boolean) => void;
+  setGeminiEnabled: (v: boolean) => void;
+  setGeminiApiKey: (v: string) => void;
+  setGeminiModel: (v: string) => void;
 }
 
 export const useSettingsStore = create<SettingsStore>((set) => ({
@@ -31,6 +37,9 @@ export const useSettingsStore = create<SettingsStore>((set) => ({
   locale: 'en',
   scanlines: true,
   onDeviceEnabled: false,
+  geminiEnabled: false,
+  geminiApiKey: '',
+  geminiModel: 'gemini-2.0-flash',
 
   loadSettings: async () => {
     const s = await getAllSettings();
@@ -75,5 +84,20 @@ export const useSettingsStore = create<SettingsStore>((set) => ({
   setOnDeviceEnabled: (v) => {
     set({ onDeviceEnabled: v });
     setSetting('onDeviceEnabled', v);
+  },
+
+  setGeminiEnabled: (v) => {
+    set({ geminiEnabled: v });
+    setSetting('geminiEnabled', v);
+  },
+
+  setGeminiApiKey: (v) => {
+    set({ geminiApiKey: v });
+    setSetting('geminiApiKey', v);
+  },
+
+  setGeminiModel: (v) => {
+    set({ geminiModel: v });
+    setSetting('geminiModel', v);
   },
 }));

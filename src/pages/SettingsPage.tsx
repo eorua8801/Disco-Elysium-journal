@@ -9,8 +9,10 @@ import './SettingsPage.css';
 export function SettingsPage() {
   const {
     ollamaEnabled, ollamaUrl, ollamaModel, locale, scanlines, onDeviceEnabled,
+    geminiEnabled, geminiApiKey, geminiModel,
     loadSettings, setOllamaEnabled, setOllamaUrl, setOllamaModel,
     setLocale, setScanlines, setOnDeviceEnabled,
+    setGeminiEnabled, setGeminiApiKey, setGeminiModel,
   } = useSettingsStore();
   const T = useT();
 
@@ -114,8 +116,56 @@ export function SettingsPage() {
             </>
           )}
 
-          {!ollamaEnabled && !onDeviceEnabled && (
+          {!ollamaEnabled && !onDeviceEnabled && !geminiEnabled && (
             <p className="settings-note">{T.settings.templatesNote}</p>
+          )}
+        </section>
+
+        {/* Gemini AI */}
+        <section className="settings-section">
+          <h3 className="settings-section__title">{T.settings.geminiTitle}</h3>
+
+          <div className="settings-row">
+            <div className="settings-row__info">
+              <span className="settings-row__label">Gemini</span>
+              <span className="settings-row__desc">{T.settings.geminiDesc}</span>
+            </div>
+            <button
+              className={`settings-toggle ${geminiEnabled ? 'settings-toggle--on' : ''}`}
+              onClick={() => setGeminiEnabled(!geminiEnabled)}
+              aria-pressed={geminiEnabled}
+            >
+              {geminiEnabled ? T.settings.on : T.settings.off}
+            </button>
+          </div>
+
+          {geminiEnabled && (
+            <>
+              <div className="settings-row settings-row--field">
+                <label className="settings-row__label">{T.settings.geminiApiKey}</label>
+                <input
+                  type="password"
+                  value={geminiApiKey}
+                  onChange={e => setGeminiApiKey(e.target.value)}
+                  placeholder="AIza…"
+                  className="settings-input"
+                  autoComplete="off"
+                />
+                <span className="settings-row__hint">{T.settings.geminiApiKeyHint}</span>
+              </div>
+
+              <div className="settings-row settings-row--field">
+                <label className="settings-row__label">{T.settings.geminiModel}</label>
+                <input
+                  type="text"
+                  value={geminiModel}
+                  onChange={e => setGeminiModel(e.target.value)}
+                  placeholder="gemini-2.0-flash"
+                  className="settings-input"
+                />
+                <span className="settings-row__hint">{T.settings.geminiModelHint}</span>
+              </div>
+            </>
           )}
         </section>
 

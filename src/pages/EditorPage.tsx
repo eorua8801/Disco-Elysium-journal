@@ -4,11 +4,11 @@ import { useJournalStore } from '../store/journalStore';
 import { useDiceStore } from '../store/diceStore';
 import { playClick } from '../utils/sounds';
 import { useT } from '../i18n';
-import type { Mood } from '../types';
+import type { MoodTag as Mood } from '../types';
 import './EditorPage.css';
 
 const MOOD_VALUES: Mood[] = ['hopeful', 'neutral', 'troubled', 'numb'];
-const MOOD_COLORS: Record<Mood, string> = {
+const MOOD_COLORS: Partial<Record<Mood, string>> = {
   hopeful:  '#27ae60',
   neutral:  '#7a7060',
   troubled: '#d4a843',
@@ -26,7 +26,7 @@ export function EditorPage() {
 
   const [title, setTitle] = useState(existing?.title ?? '');
   const [content, setContent] = useState(existing?.content ?? '');
-  const [mood, setMood] = useState<Mood | undefined>(existing?.mood);
+  const [mood, setMood] = useState<Mood | undefined>(existing?.mood ?? undefined);
   const [saving, setSaving] = useState(false);
   const [savedId, setSavedId] = useState<string | null>(null);
 
