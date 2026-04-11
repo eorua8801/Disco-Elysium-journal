@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useSettingsStore } from '../store/settingsStore';
 import { PageHeader } from '../components/layout/PageHeader';
+import { useT } from '../i18n';
 import './SettingsPage.css';
 
 export function SettingsPage() {
@@ -9,42 +10,38 @@ export function SettingsPage() {
     loadSettings, setOllamaEnabled, setOllamaUrl, setOllamaModel,
     setLocale, setScanlines,
   } = useSettingsStore();
+  const T = useT();
 
-  useEffect(() => {
-    loadSettings();
-  }, [loadSettings]);
+  useEffect(() => { loadSettings(); }, [loadSettings]);
 
   return (
     <div className="settings-page animate-page-in">
-      <PageHeader title="Settings" subtitle="Configure the journal" />
+      <PageHeader title={T.settings.title} subtitle={T.settings.subtitle} />
 
       <div className="settings-page__body">
 
         {/* AI / Ollama */}
         <section className="settings-section">
-          <h3 className="settings-section__title">AI Skill Voices</h3>
+          <h3 className="settings-section__title">{T.settings.aiTitle}</h3>
 
           <div className="settings-row">
             <div className="settings-row__info">
-              <span className="settings-row__label">Enable Ollama</span>
-              <span className="settings-row__desc">
-                Use a local LLM to generate dynamic skill comments instead of templates.
-                Requires Ollama running at the configured URL.
-              </span>
+              <span className="settings-row__label">{T.settings.enableOllama}</span>
+              <span className="settings-row__desc">{T.settings.ollamaDesc}</span>
             </div>
             <button
               className={`settings-toggle ${ollamaEnabled ? 'settings-toggle--on' : ''}`}
               onClick={() => setOllamaEnabled(!ollamaEnabled)}
               aria-pressed={ollamaEnabled}
             >
-              {ollamaEnabled ? 'ON' : 'OFF'}
+              {ollamaEnabled ? T.settings.on : T.settings.off}
             </button>
           </div>
 
           {ollamaEnabled && (
             <>
               <div className="settings-row settings-row--field">
-                <label className="settings-row__label">Ollama URL</label>
+                <label className="settings-row__label">{T.settings.ollamaUrl}</label>
                 <input
                   type="text"
                   value={ollamaUrl}
@@ -55,51 +52,46 @@ export function SettingsPage() {
               </div>
 
               <div className="settings-row settings-row--field">
-                <label className="settings-row__label">Model</label>
+                <label className="settings-row__label">{T.settings.model}</label>
                 <input
                   type="text"
                   value={ollamaModel}
                   onChange={e => setOllamaModel(e.target.value)}
-                  placeholder="phi3:mini"
+                  placeholder="gemma4:1b"
                   className="settings-input"
                 />
-                <span className="settings-row__hint">
-                  Recommended: phi3:mini, llama3.2:1b, mistral:7b
-                </span>
+                <span className="settings-row__hint">{T.settings.modelHint}</span>
               </div>
             </>
           )}
 
           {!ollamaEnabled && (
-            <p className="settings-note">
-              Skill voices will use hand-crafted templates.
-              Enable Ollama for AI-generated commentary.
-            </p>
+            <p className="settings-note">{T.settings.templatesNote}</p>
           )}
         </section>
 
         {/* Display */}
         <section className="settings-section">
-          <h3 className="settings-section__title">Display</h3>
+          <h3 className="settings-section__title">{T.settings.displayTitle}</h3>
 
           <div className="settings-row">
             <div className="settings-row__info">
-              <span className="settings-row__label">Scanlines</span>
-              <span className="settings-row__desc">CRT scanline overlay effect</span>
+              <span className="settings-row__label">{T.settings.scanlines}</span>
+              <span className="settings-row__desc">{T.settings.scanlinesDesc}</span>
             </div>
             <button
               className={`settings-toggle ${scanlines ? 'settings-toggle--on' : ''}`}
               onClick={() => setScanlines(!scanlines)}
               aria-pressed={scanlines}
             >
-              {scanlines ? 'ON' : 'OFF'}
+              {scanlines ? T.settings.on : T.settings.off}
             </button>
           </div>
         </section>
 
         {/* Language */}
         <section className="settings-section">
-          <h3 className="settings-section__title">Language</h3>
+          <h3 className="settings-section__title">{T.settings.langTitle}</h3>
 
           <div className="settings-lang">
             <button
@@ -111,24 +103,17 @@ export function SettingsPage() {
             <button
               className={`lang-btn ${locale === 'ko' ? 'lang-btn--active' : ''}`}
               onClick={() => setLocale('ko')}
-              title="Korean localization coming soon"
             >
               한국어
-              <span className="lang-btn__soon">Soon</span>
             </button>
           </div>
         </section>
 
         {/* About */}
         <section className="settings-section">
-          <h3 className="settings-section__title">About</h3>
-          <p className="settings-note">
-            Disco Journal — A journal app inspired by the skill system of Disco Elysium.
-            All entries are stored locally in your browser's IndexedDB.
-          </p>
-          <p className="settings-note settings-note--dim">
-            Disco Elysium is a game by ZA/UM. This is a fan project.
-          </p>
+          <h3 className="settings-section__title">{T.settings.aboutTitle}</h3>
+          <p className="settings-note">{T.settings.aboutNote}</p>
+          <p className="settings-note settings-note--dim">{T.settings.aboutFan}</p>
         </section>
 
       </div>

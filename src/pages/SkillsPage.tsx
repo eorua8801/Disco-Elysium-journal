@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SKILLS, SKILLS_BY_STAT, type StatGroup } from '../data/skills';
 import { useSettingsStore } from '../store/settingsStore';
 import { PageHeader } from '../components/layout/PageHeader';
+import { useT } from '../i18n';
 import './SkillsPage.css';
 
 const STATS: StatGroup[] = ['Intellect', 'Psyche', 'Physique', 'Motorics'];
@@ -17,6 +18,7 @@ const STAT_META: Record<StatGroup, { color: string; bg: string; label: string }>
 export function SkillsPage() {
   const { activeSkills, setActiveSkills } = useSettingsStore();
   const [expanded, setExpanded] = useState<string | null>(null);
+  const T = useT();
 
   const isActive = (id: string) => activeSkills.length === 0 || activeSkills.includes(id);
 
@@ -38,19 +40,19 @@ export function SkillsPage() {
   return (
     <div className="skills-page animate-page-in">
       <PageHeader
-        title="Skills"
+        title={T.skills.title}
         icon="⚄"
         subtitle={`${activeCount}/${SKILLS.length}`}
         actions={
           activeSkills.length > 0 ? (
             <button className="btn-secondary" style={{ fontSize: '0.6rem', padding: '3px 8px' }} onClick={activateAll}>
-              All
+              {T.skills.allBtn}
             </button>
           ) : null
         }
       />
 
-      {/* Stat score row — like the PROFILE > SKILLS stat header */}
+      {/* Stat score row */}
       <div className="skills-stat-row">
         {STATS.map(stat => {
           const meta = STAT_META[stat];
@@ -73,7 +75,7 @@ export function SkillsPage() {
         <div className="skills-columns-header">
           {STATS.map(stat => (
             <div key={stat} className="skills-col-label" style={{ color: STAT_META[stat].color }}>
-              {stat}
+              {T.skills.stats[stat]}
             </div>
           ))}
         </div>
@@ -85,6 +87,7 @@ export function SkillsPage() {
               {SKILLS_BY_STAT[stat]?.map((skill, i) => {
                 const active = isActive(skill.id);
                 const isExp = expanded === skill.id;
+                const displayName = T.skills.names[skill.id] ?? skill.name;
                 return (
                   <motion.div
                     key={skill.id}
@@ -95,14 +98,11 @@ export function SkillsPage() {
                     transition={{ delay: i * 0.03 }}
                     onClick={() => setExpanded(e => e === skill.id ? null : skill.id)}
                   >
-                    {/* Dark art card face */}
                     <div className="skill-card-v2__face">
                       <div className="skill-card-v2__art" style={{ background: `linear-gradient(160deg, ${skill.color}22, #000 70%)` }}>
                         <span className="skill-card-v2__initial">{skill.name.slice(0, 2).toUpperCase()}</span>
                       </div>
-                      {/* Bottom-right level badge */}
                       <span className="skill-card-v2__badge">◇</span>
-                      {/* Toggle dot */}
                       <button
                         className="skill-card-v2__toggle"
                         onClick={e => { e.stopPropagation(); toggleSkill(skill.id); }}
@@ -112,7 +112,7 @@ export function SkillsPage() {
                       </button>
                     </div>
 
-                    <div className="skill-card-v2__name">{skill.name}</div>
+                    <div className="skill-card-v2__name">{displayName}</div>
 
                     <AnimatePresence>
                       {isExp && (
@@ -133,10 +133,6 @@ export function SkillsPage() {
             </div>
           ))}
         </div>
-
-        <p className="skills-page__hint">
-          Tap a skill to see details. Hold to toggle activation.
-        </p>
       </div>
     </div>
   );

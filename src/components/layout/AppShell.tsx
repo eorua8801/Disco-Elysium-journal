@@ -1,14 +1,8 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { DiceModal } from '../dice/DiceModal';
 import { playClick } from '../../utils/sounds';
+import { useT } from '../../i18n';
 import './AppShell.css';
-
-const NAV_ITEMS = [
-  { path: '/', label: 'Journal', icon: '◈' },
-  { path: '/new', label: 'New Entry', icon: '⊕', accent: true },
-  { path: '/skills', label: 'Skills', icon: '◉' },
-  { path: '/settings', label: 'Settings', icon: '◎' },
-];
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -16,7 +10,15 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   const location = useLocation();
+  const T = useT();
   const isEditor = location.pathname.startsWith('/new') || location.pathname.startsWith('/edit');
+
+  const NAV_ITEMS = [
+    { path: '/', label: T.nav.journal,  icon: '◈' },
+    { path: '/new', label: T.nav.newEntry, icon: '⊕', accent: true },
+    { path: '/skills', label: T.nav.skills,   icon: '◉' },
+    { path: '/settings', label: T.nav.settings, icon: '◎' },
+  ];
 
   return (
     <div className="app-shell">

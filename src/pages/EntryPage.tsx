@@ -3,9 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useJournalStore } from '../store/journalStore';
 import { useDiceStore } from '../store/diceStore';
+import { useSettingsStore } from '../store/settingsStore';
 import { PageHeader } from '../components/layout/PageHeader';
 import { SkillPanel } from '../components/skills/SkillPanel';
 import { CheckCard } from '../components/dice/CheckCard';
+import { useT } from '../i18n';
 import './EntryPage.css';
 
 const MOOD_COLORS: Record<string, string> = {
@@ -14,8 +16,8 @@ const MOOD_COLORS: Record<string, string> = {
   anxious: '#d4a024', determined: '#3a8fd4',
 };
 
-function formatFullDate(iso: string): string {
-  return new Date(iso).toLocaleDateString('en-US', {
+function formatFullDate(iso: string, locale: 'en' | 'ko'): string {
+  return new Date(iso).toLocaleDateString(locale === 'ko' ? 'ko-KR' : 'en-US', {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   });
 }
@@ -25,6 +27,8 @@ export function EntryPage() {
   const navigate = useNavigate();
   const { entries, deleteEntry, regenerateComments } = useJournalStore();
   const { openModal } = useDiceStore();
+  const { locale } = useSettingsStore();
+  const T = useT();
   const [regenerating, setRegenerating] = useState(false);
 
   const entry = entries.find(e => e.id === id);
@@ -32,7 +36,7 @@ export function EntryPage() {
   if (!entry) return null;
 
   const handleDelete = async () => {
-    if (confirm('Delete this entry?')) { await deleteEntry(entry.id); navigate('/'); }
+    if (confirm(T.entry.confirmDelete)) { await deleteEntry(entry.id); navigate('/'); }
   };
   const handleRegenerate = async () => {
     setRegenerating(true);
@@ -43,7 +47,7 @@ export function EntryPage() {
   return (
     <div className="entry-page animate-page-in">
       <PageHeader
-        title={entry.title || 'Untitled Entry'}
+        title={entry.title || T.entry.untitled}
         icon="◈"
         backPath="/"
         actions={
@@ -56,24 +60,22 @@ export function EntryPage() {
       />
 
       <div className="entry-page__body">
-        {/* Meta fields — Case Files style */}
         <div className="entry-meta">
-          <span className="entry-meta__date">{formatFullDate(entry.createdAt)}</span>
+          <span className="entry-meta__date">{formatFullDate(entry.createdAt, locale)}</span>
           {entry.mood && (
             <span className="entry-meta__mood" style={{ color: MOOD_COLORS[entry.mood] ?? 'var(--amber)' }}>
-              {entry.mood}
+              {T.editor.moods[entry.mood as keyof typeof T.editor.moods] ?? entry.mood}
             </span>
           )}
         </div>
 
-        {/* Body content in amber-bordered box */}
         <motion.div
           className="entry-content-box"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.25, delay: 0.05 }}
         >
-          <div className="entry-content-box__label">Entry</div>
+          <div className="entry-content-box__label">{T.entry.label}</div>
           <div className="entry-content">
             {entry.content.split('\n').map((para, i) =>
               para.trim() ? <p key={i}>{para}</p> : <br key={i} />
@@ -81,21 +83,18 @@ export function EntryPage() {
           </div>
         </motion.div>
 
-        {/* Skill Checks */}
         {entry.checks.length > 0 && (
           <section className="entry-section">
-            <h3 className="entry-section__title">⚄ Skill Checks</h3>
+            <h3 className="entry-section__title">{T.entry.skillChecks}</h3>
             {entry.checks.map(check => <CheckCard key={check.id} check={check} />)}
           </section>
         )}
 
-        {/* Skill Voices */}
         <SkillPanel comments={entry.skillComments} animate={false} />
 
-        {/* Regenerate */}
         <div className="entry-regen">
           <button className="entry-regen__btn" onClick={handleRegenerate} disabled={regenerating}>
-            {regenerating ? 'Generating…' : '↻ Regenerate voices'}
+            {regenerating ? T.entry.regenerating : T.entry.regenerate}
           </button>
         </div>
       </div>

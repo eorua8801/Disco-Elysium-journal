@@ -8,6 +8,7 @@ import { SKILLS, SKILLS_BY_ID, DIFFICULTY_LABELS } from '../../data/skills';
 import { createCheck, DIFFICULTY_PRESETS, getResultDescription } from '../../utils/diceEngine';
 import { suggestCheckParameters } from '../../utils/skillMatcher';
 import { playClick, startFilmWind, stopFilmWind, playShutter } from '../../utils/sounds';
+import { useT } from '../../i18n';
 import './DiceModal.css';
 
 export function DiceModal() {
@@ -23,6 +24,7 @@ export function DiceModal() {
   const [localDiff, setLocalDiff] = useState(difficulty);
   const [rollKey, setRollKey] = useState(0);
   const stripsDoneRef = useRef(0);
+  const T = useT();
 
   // Start/stop film wind sound with rolling phase
   useEffect(() => {
@@ -97,34 +99,36 @@ export function DiceModal() {
           {/* ── Setup phase ── */}
           {phase === 'setup' && (
             <div className="dice-modal__setup">
-              <h2 className="dice-modal__title">⬡ SKILL CHECK</h2>
+              <h2 className="dice-modal__title">{T.dice.title}</h2>
 
               <div className="dice-setup__field">
-                <label>What are you attempting?</label>
+                <label>{T.dice.whatAttempting}</label>
                 <textarea
                   value={localDesc}
                   onChange={e => setLocalDesc(e.target.value)}
-                  placeholder="I tried to apologize honestly..."
+                  placeholder={T.dice.placeholder}
                   rows={2}
                   autoFocus
                 />
               </div>
 
               <div className="dice-setup__field">
-                <label>Skill</label>
+                <label>{T.dice.skillLabel}</label>
                 <select
                   value={localSkill}
                   onChange={e => setLocalSkill(e.target.value)}
                   style={{ '--skill-color': skill?.color } as React.CSSProperties}
                 >
                   {SKILLS.map(s => (
-                    <option key={s.id} value={s.id}>{s.name} ({s.stat})</option>
+                    <option key={s.id} value={s.id}>
+                      {T.skills.names[s.id] ?? s.name} ({s.stat})
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="dice-setup__field">
-                <label>Difficulty</label>
+                <label>{T.dice.difficultyLabel}</label>
                 <div className="dice-setup__difficulty">
                   {DIFFICULTY_PRESETS.map(p => (
                     <button
@@ -133,7 +137,7 @@ export function DiceModal() {
                       onClick={() => setLocalDiff(p.value)}
                     >
                       {p.value}
-                      <span>{DIFFICULTY_LABELS[p.value]}</span>
+                      <span>{T.dice.difficulties[p.value] ?? DIFFICULTY_LABELS[p.value]}</span>
                     </button>
                   ))}
                 </div>
@@ -141,14 +145,14 @@ export function DiceModal() {
 
               <div className="dice-modal__actions">
                 <button className="btn-secondary" onClick={() => { playClick(); reset(); closeModal(); }}>
-                  Cancel
+                  {T.dice.cancel}
                 </button>
                 <button
                   className="btn-primary"
                   onClick={handleRoll}
                   disabled={!localDesc.trim()}
                 >
-                  Roll 2d6
+                  {T.dice.roll}
                 </button>
               </div>
             </div>
@@ -213,17 +217,19 @@ export function DiceModal() {
                 <span className="dice-result__total" style={{ color: passed ? 'var(--amber)' : 'var(--accent-red)' }}>
                   {total}
                 </span>
-                <span className="dice-result__vs">vs {localDiff} ({DIFFICULTY_LABELS[localDiff] ?? localDiff})</span>
+                <span className="dice-result__vs">
+                  {T.dice.vsLabel} {localDiff} ({T.dice.difficulties[localDiff] ?? DIFFICULTY_LABELS[localDiff] ?? localDiff})
+                </span>
               </div>
 
               <div className="dice-result__desc">{localDesc}</div>
 
               <div className="dice-result__skill" style={{ color: skill?.color }}>
-                {skill?.name} — {skill?.stat}
+                {T.skills.names[localSkill] ?? skill?.name} — {skill?.stat}
               </div>
 
               <button className="btn-primary dice-result__confirm" onClick={handleConfirm}>
-                {pendingEntryId ? 'Save to Entry' : 'Close'}
+                {pendingEntryId ? T.dice.saveToEntry : T.dice.close}
               </button>
             </motion.div>
           )}

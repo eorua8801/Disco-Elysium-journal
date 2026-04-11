@@ -3,21 +3,24 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useJournalStore } from '../store/journalStore';
 import { useDiceStore } from '../store/diceStore';
 import { playClick } from '../utils/sounds';
+import { useT } from '../i18n';
 import type { Mood } from '../types';
 import './EditorPage.css';
 
-const MOODS: { value: Mood; label: string; color: string }[] = [
-  { value: 'hopeful', label: 'Hopeful', color: '#27ae60' },
-  { value: 'neutral', label: 'Neutral', color: '#7a7060' },
-  { value: 'troubled', label: 'Troubled', color: '#d4a843' },
-  { value: 'numb', label: 'Numb', color: '#2e86ab' },
-];
+const MOOD_VALUES: Mood[] = ['hopeful', 'neutral', 'troubled', 'numb'];
+const MOOD_COLORS: Record<Mood, string> = {
+  hopeful:  '#27ae60',
+  neutral:  '#7a7060',
+  troubled: '#d4a843',
+  numb:     '#2e86ab',
+};
 
 export function EditorPage() {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { entries, createEntry, updateEntry } = useJournalStore();
   const { openModal } = useDiceStore();
+  const T = useT();
 
   const existing = id ? entries.find(e => e.id === id) : undefined;
 
@@ -61,7 +64,6 @@ export function EditorPage() {
 
   const handleDiceRoll = async () => {
     playClick();
-    // Save as draft first if new entry, to have an ID to attach the check
     if (!existing && content.trim()) {
       setSaving(true);
       const entry = await createEntry({
@@ -101,12 +103,12 @@ export function EditorPage() {
             else navigate('/');
           }}
         >
-          ← Cancel
+          {T.editor.cancel}
         </button>
 
         <div className="editor-header__meta">
           {wordCount > 0 && (
-            <span className="editor-word-count">{wordCount} words</span>
+            <span className="editor-word-count">{T.editor.words(wordCount)}</span>
           )}
         </div>
 
@@ -114,7 +116,7 @@ export function EditorPage() {
           <button
             className="editor-header__dice"
             onClick={handleDiceRoll}
-            title="Roll a skill check"
+            title={T.editor.rollCheck}
           >
             ⚄
           </button>
@@ -123,7 +125,7 @@ export function EditorPage() {
             onClick={handleSave}
             disabled={saving || !content.trim()}
           >
-            {saving ? '…' : 'Save'}
+            {saving ? T.editor.saving : T.editor.save}
           </button>
         </div>
       </header>
@@ -131,14 +133,14 @@ export function EditorPage() {
       <div className="editor-body">
         {/* Mood selector */}
         <div className="editor-mood">
-          {MOODS.map(m => (
+          {MOOD_VALUES.map(m => (
             <button
-              key={m.value}
-              className={`mood-btn ${mood === m.value ? 'mood-btn--active' : ''}`}
-              style={{ '--mood-color': m.color } as React.CSSProperties}
-              onClick={() => setMood(prev => prev === m.value ? undefined : m.value)}
+              key={m}
+              className={`mood-btn ${mood === m ? 'mood-btn--active' : ''}`}
+              style={{ '--mood-color': MOOD_COLORS[m] } as React.CSSProperties}
+              onClick={() => setMood(prev => prev === m ? undefined : m)}
             >
-              {m.label}
+              {T.editor.moods[m]}
             </button>
           ))}
         </div>
@@ -155,17 +157,16 @@ export function EditorPage() {
           className="editor-content"
           value={content}
           onChange={e => setContent(e.target.value)}
-          placeholder="What happened? What did you feel? What are you trying to understand?"
+          placeholder={T.editor.placeholder}
           autoFocus={!existing}
         />
       </div>
 
-      {/* Floating dice button for quick access during writing */}
       <button
         className="editor-float-dice"
         onClick={handleDiceRoll}
-        aria-label="Roll skill check"
-        title="Roll a skill check"
+        aria-label={T.editor.rollCheck}
+        title={T.editor.rollCheck}
       >
         ⚄
       </button>

@@ -17,7 +17,7 @@ export const useSettingsStore = create<SettingsStore>((set) => ({
   loaded: false,
   ollamaEnabled: false,
   ollamaUrl: 'http://localhost:11434',
-  ollamaModel: 'phi3:mini',
+  ollamaModel: 'gemma4:1b',
   activeSkills: [],
   locale: 'en',
   scanlines: true,

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { SkillVoice } from './SkillVoice';
+import { useT } from '../../i18n';
 import type { SkillComment } from '../../types';
 import './SkillPanel.css';
 
@@ -11,6 +12,7 @@ interface SkillPanelProps {
 
 export function SkillPanel({ comments, animate = true }: SkillPanelProps) {
   const [expanded, setExpanded] = useState(true);
+  const T = useT();
 
   if (comments.length === 0) return null;
 
@@ -22,7 +24,7 @@ export function SkillPanel({ comments, animate = true }: SkillPanelProps) {
         aria-expanded={expanded}
       >
         <span className="skill-panel__toggle-label">
-          INTERNAL MONOLOGUE
+          {T.skillPanel.title}
           <span className="skill-panel__count">{comments.length}</span>
         </span>
         <span className="skill-panel__toggle-icon">{expanded ? '▲' : '▼'}</span>
