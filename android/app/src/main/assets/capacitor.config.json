@@ -1,0 +1,13 @@
+{
+	"appId": "com.discojounal.app",
+	"appName": "Disco Journal",
+	"webDir": "dist",
+	"android": {
+		"backgroundColor": "#22180a"
+	},
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 0
+		}
+	}
+}
