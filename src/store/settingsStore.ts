@@ -11,6 +11,7 @@ interface SettingsStore extends AppSettings {
   setActiveSkills: (ids: string[]) => void;
   setLocale: (v: 'en' | 'ko') => void;
   setScanlines: (v: boolean) => void;
+  setOnDeviceEnabled: (v: boolean) => void;
 }
 
 export const useSettingsStore = create<SettingsStore>((set) => ({
@@ -21,6 +22,7 @@ export const useSettingsStore = create<SettingsStore>((set) => ({
   activeSkills: [],
   locale: 'en',
   scanlines: true,
+  onDeviceEnabled: false,
 
   loadSettings: async () => {
     const s = await getAllSettings();
@@ -60,5 +62,10 @@ export const useSettingsStore = create<SettingsStore>((set) => ({
       '--scanline-opacity',
       v ? '0.025' : '0'
     );
+  },
+
+  setOnDeviceEnabled: (v) => {
+    set({ onDeviceEnabled: v });
+    setSetting('onDeviceEnabled', v);
   },
 }));

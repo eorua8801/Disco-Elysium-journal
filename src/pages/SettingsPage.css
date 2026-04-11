@@ -124,6 +124,76 @@
   background: var(--accent-yellow-glow);
 }
 
+/* On-device AI */
+.settings-row--model-status {
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.settings-btn {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  padding: 6px 14px;
+  border-radius: 3px;
+  border: 1px solid var(--border-muted);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.settings-btn:hover {
+  border-color: var(--accent-yellow-dim);
+  color: var(--accent-yellow);
+}
+
+.settings-btn--download {
+  border-color: var(--accent-yellow-dim);
+  color: var(--accent-yellow);
+}
+
+.settings-btn--danger {
+  border-color: rgba(192, 57, 43, 0.4);
+  color: #c0392b;
+}
+
+.settings-btn--cancel {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+}
+
+.settings-download-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-download-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--border-dim);
+  border-radius: 2px;
+  overflow: hidden;
+  min-width: 60px;
+}
+
+.settings-download-fill {
+  height: 100%;
+  background: var(--accent-yellow);
+  transition: width 0.3s linear;
+  border-radius: 2px;
+}
+
+.settings-download-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
 .lang-btn__soon {
   position: absolute;
   top: -6px;

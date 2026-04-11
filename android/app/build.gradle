@@ -2,6 +2,10 @@ apply plugin: 'com.android.application'
 
 android {
     namespace = "com.discojounal.app"
+    packagingOptions {
+        // MediaPipe ships native .so files; pick the first copy to avoid duplicate conflicts
+        pickFirst 'lib/**/*.so'
+    }
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
         applicationId "com.discojounal.app"
@@ -36,6 +40,8 @@ dependencies {
     implementation "androidx.coordinatorlayout:coordinatorlayout:$androidxCoordinatorLayoutVersion"
     implementation "androidx.core:core-splashscreen:$coreSplashScreenVersion"
     implementation project(':capacitor-android')
+    // On-device LLM inference — MediaPipe tasks-genai (Gemma 3 1B INT4)
+    implementation 'com.google.mediapipe:tasks-genai:0.10.22'
     testImplementation "junit:junit:$junitVersion"
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"

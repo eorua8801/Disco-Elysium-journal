@@ -3,6 +3,8 @@ import { SKILLS_BY_ID } from '../data/skills';
 import { generateTemplateComments } from './skillMatcher';
 import { useSettingsStore } from '../store/settingsStore';
 import { getT } from '../i18n';
+import { OnDeviceLLM } from '../plugins/OnDeviceLLM';
+import { Capacitor } from '@capacitor/core';
 
 // ---------------------------------------------------------------------------
 // Skill voice style descriptions (used in both EN and KO prompts)
@@ -94,6 +96,27 @@ function buildPromptKo(skillId: string, entryText: string): string {
 }
 
 // ---------------------------------------------------------------------------
+// On-device inference (MediaPipe / Gemma 3 1B) — Android only
+// ---------------------------------------------------------------------------
+async function fetchOnDeviceComment(
+  skillId: string,
+  entryText: string,
+  locale: 'en' | 'ko',
+): Promise<string | null> {
+  if (!Capacitor.isNativePlatform()) return null;
+  const prompt = locale === 'ko'
+    ? buildPromptKo(skillId, entryText)
+    : buildPromptEn(skillId, entryText);
+  if (!prompt) return null;
+  try {
+    const { text } = await OnDeviceLLM.generate({ prompt });
+    return text || null;
+  } catch {
+    return null;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Ollama fetch
 // ---------------------------------------------------------------------------
 async function fetchOllamaComment(
@@ -147,10 +170,14 @@ export async function generateSkillComments(
 ): Promise<SkillComment[]> {
   if (!content.trim()) return [];
 
-  const { ollamaEnabled, ollamaUrl, ollamaModel, locale } = useSettingsStore.getState();
+  const { ollamaEnabled, ollamaUrl, ollamaModel, locale, onDeviceEnabled } =
+    useSettingsStore.getState();
   const templateResults = generateTemplateComments(content, checks, 3);
 
-  if (!ollamaEnabled) {
+  // Priority: on-device > Ollama > templates
+  const useOnDevice = onDeviceEnabled && Capacitor.isNativePlatform();
+
+  if (!useOnDevice && !ollamaEnabled) {
     return templateResults.map(r => ({
       skillId: r.skillId,
       text: r.text,
@@ -161,11 +188,21 @@ export async function generateSkillComments(
 
   const comments: SkillComment[] = await Promise.all(
     templateResults.map(async (r) => {
-      const aiText = await fetchOllamaComment(r.skillId, content, ollamaUrl, ollamaModel, locale);
+      let aiText: string | null = null;
+
+      if (useOnDevice) {
+        aiText = await fetchOnDeviceComment(r.skillId, content, locale);
+      }
+      if (!aiText && ollamaEnabled) {
+        aiText = await fetchOllamaComment(r.skillId, content, ollamaUrl, ollamaModel, locale);
+      }
+
       return {
         skillId: r.skillId,
         text: aiText ?? r.text,
-        source: (aiText ? 'ollama' : 'template') as 'ollama' | 'template',
+        source: (aiText
+          ? (useOnDevice && aiText ? 'ollama' : 'ollama')
+          : 'template') as 'ollama' | 'template',
         triggeredAt: new Date().toISOString(),
       };
     })

@@ -64,4 +64,5 @@ export interface AppSettings {
   activeSkillIds: string[];
   scanlinesEnabled: boolean;
   locale: 'en' | 'ko';
+  onDeviceEnabled: boolean;
 }

@@ -74,6 +74,15 @@ interface Translations {
     model: string;
     modelHint: string;
     templatesNote: string;
+    onDeviceTitle: string;
+    onDeviceDesc: string;
+    onDeviceNote: string;
+    modelStatus: string;
+    modelStatusReady: string;
+    downloadModel: string;
+    downloading: (pct: number) => string;
+    cancelDownload: string;
+    deleteModel: string;
     displayTitle: string;
     scanlines: string;
     scanlinesDesc: string;
@@ -197,7 +206,16 @@ const en: Translations = {
     ollamaUrl:    'Ollama URL',
     model:        'Model',
     modelHint:    'Recommended: gemma4:1b · gemma3:1b · phi3:mini',
-    templatesNote:'Skill voices will use hand-crafted templates. Enable Ollama for AI-generated commentary.',
+    templatesNote:'Skill voices will use hand-crafted templates. Enable Ollama or On-Device AI for dynamic commentary.',
+    onDeviceTitle: 'On-Device AI (Android)',
+    onDeviceDesc: 'Run Gemma 3 1B directly on this device. No server needed. Requires a one-time ~700 MB download.',
+    onDeviceNote: 'Requires Android 10+, ARM64 chip, ~700 MB free storage. Runs fully offline after download.',
+    modelStatus: 'Model: not downloaded',
+    modelStatusReady: 'Model: ready ✓',
+    downloadModel: 'Download model (~700 MB)',
+    downloading: (pct) => `Downloading… ${pct}%`,
+    cancelDownload: 'Cancel',
+    deleteModel: 'Delete model',
     displayTitle: 'Display',
     scanlines:    'Scanlines',
     scanlinesDesc:'CRT scanline overlay effect',
@@ -321,7 +339,16 @@ const ko: Translations = {
     ollamaUrl:    'Ollama URL',
     model:        '모델',
     modelHint:    '추천: gemma4:1b · gemma3:1b · phi3:mini',
-    templatesNote:'기술 목소리는 제작된 템플릿을 사용합니다. AI 생성 코멘트를 위해 Ollama를 활성화하세요.',
+    templatesNote:'기술 목소리는 제작된 템플릿을 사용합니다. Ollama 또는 온디바이스 AI를 활성화하면 동적 코멘트가 생성됩니다.',
+    onDeviceTitle: '온디바이스 AI (안드로이드)',
+    onDeviceDesc: 'Gemma 3 1B를 기기에서 직접 실행합니다. 서버 불필요. 최초 1회 약 700MB 다운로드가 필요합니다.',
+    onDeviceNote: 'Android 10+, ARM64 칩, 약 700MB 여유 공간 필요. 다운로드 후 완전 오프라인 동작.',
+    modelStatus: '모델: 미다운로드',
+    modelStatusReady: '모델: 준비됨 ✓',
+    downloadModel: '모델 다운로드 (~700 MB)',
+    downloading: (pct) => `다운로드 중… ${pct}%`,
+    cancelDownload: '취소',
+    deleteModel: '모델 삭제',
     displayTitle: '화면',
     scanlines:    '스캔라인',
     scanlinesDesc:'CRT 스캔라인 오버레이 효과',
